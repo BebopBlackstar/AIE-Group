@@ -37,13 +37,13 @@ var SCREEN_WIDTH = canvas.width;
 var SCREEN_HEIGHT = canvas.height;
 
 var LAYER_COUNT = 2;
-var MAP = { tw: 60, th: 15};
-var TILE = 35;
-var TILESET_TILE = TILE * 2;
-var TILESET_PADDING = 2;
-var TILESET_SPACING = 2;
-var TILESET_COUNT_X = 14;
-var TILESET_COUNT_Y = 14;
+var MAP = { tw: 60, th: 30};
+var TILE = 16;
+var TILESET_TILE = TILE * 1 ;
+var TILESET_PADDING = 0;
+var TILESET_SPACING = 0;
+var TILESET_COUNT_X = 16;
+var TILESET_COUNT_Y = 24;
 
 // layer variables
 var LAYER_BACKGOUND = 0;
@@ -107,10 +107,9 @@ function initialize()
 	{ // initialize the collision map
 		cells[layerIdx] = [];
 		var idx = 0;
-		for(var y = 0; y < level1.layers[layerIdx].height; y++) 
-		{
+		for(var x = 0; x < level1.layers[layerIdx].width; x++) 		{
 			cells[layerIdx][y] = [];
-			for(var x = 0; x < level1.layers[layerIdx].width; x++) 
+				for(var y = 0; y < level1.layers[layerIdx].height; y++) 
 			{
 				if(level1.layers[layerIdx].data[idx] != 0) 
 				{
@@ -122,7 +121,7 @@ function initialize()
 					cells[layerIdx][y-1][x+1] = 1;
 					cells[layerIdx][y][x+1] = 1;
 				}
-				else if(cells[layerIdx][y][x] != 1) 
+				else if(cells[layerIdx][x][y] != 1) 
 				{
 				// if we haven't set this cell's value, then set it to 0 now
 				cells[layerIdx][y][x] = 0;
