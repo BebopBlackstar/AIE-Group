@@ -36,7 +36,7 @@ function getDeltaTime()
 var SCREEN_WIDTH = canvas.width;
 var SCREEN_HEIGHT = canvas.height;
 
-var LAYER_COUNT = 3;
+var LAYER_COUNT = 2;
 var MAP = { tw: 60, th: 15};
 var TILE = 35;
 var TILESET_TILE = TILE * 2;
@@ -48,9 +48,8 @@ var TILESET_COUNT_Y = 14;
 // layer variables
 var LAYER_BACKGOUND = 0;
 var LAYER_PLATFORMS = 1;
-var LAYER_LADDERS = 2;
-var LAYER_OBJECT_ENEMIES = 3;
-var LAYER_OBJECT_TRIGGERS = 4;
+var LAYER_OBJECT_ENEMIES = 2;
+var LAYER_OBJECT_TRIGGERS = 3;
 
  // abitrary choice for 1m
 var METER = TILE;
@@ -171,7 +170,7 @@ function initialize()
 	}
 	
 	// background music
-	musicBackground = new Howl
+	//musicBackground = new Howl
 	(
 		{
 			urls: ["background.ogg"],
@@ -180,7 +179,7 @@ function initialize()
 			volume: 0.5
 		} 
 	);
-	musicBackground.play();
+	//musicBackground.play();
 	
 
 }
