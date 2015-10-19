@@ -51,6 +51,8 @@ var LAYER_PLATFORMS = 1;
 var LAYER_OBJECT_ENEMIES = 2;
 var LAYER_OBJECT_TRIGGERS = 3;
 
+var worldOffsetX = 10;
+
  // abitrary choice for 1m
 var METER = TILE;
  // gravitational constant
