@@ -24,7 +24,7 @@ var Player = function()
 	this.height = 48;
 	
 	this.position = new Vector2();
-	this.position.set(100, 100);
+	this.position.set(10, 400);
 	
 	this.shootTimer = 0;
 	
@@ -36,13 +36,19 @@ var Player = function()
 	this.lives = 3;
 	this.sprite.setAnimation(ANIM_WALK_RIGHT);
 	
+	
 	this.speed = 1;
+	this.distance = 0;
 	};
 	
 	
 Player.prototype.update = function(deltaTime)
 {
+	// TEMPORARY SPEED MULTIPLIER AND DISTANCE
+	//this.distance += deltaTime/60;
+	//this.speed = 1 + this.distance;
 	
+	this.speed = 1;
 	
 	 
 	
@@ -58,20 +64,29 @@ Player.prototype.update = function(deltaTime)
 	var right = false;
 	var jump = false;
 	right = true;
-	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true && !falling)
+	
+	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true && !this.falling)
 	 {
-		 right = true
+		 this.speed *= 1.25;
 	 }
 	 
-	 else if (keyboard.isKeyDown(keyboard.KEY_LEFT) == true && !falling && !this.jumping)
+	 else if (keyboard.isKeyDown(keyboard.KEY_LEFT) == true && !this.falling)
 	 {
-		 left = true
+		 this.speed *= 0.75;
 	 }
 	 
 	 if (keyboard.isKeyDown(keyboard.KEY_SPACE) == true && !this.falling && !this.jumping)
 	 {
 		 jump = true
 	 }
+	 
+	 // hack to fly. I need it. hold down ~ and 0
+	 if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_0) == true)
+	 {
+		this.position.y = 20
+	 }
+	 
+	 
 	
 	
 	var wasleft = this.velocity.x < 0;
@@ -105,7 +120,7 @@ Player.prototype.update = function(deltaTime)
 		// calculate the new position and velocity:
 	this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
 	this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
-	this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -MAXDX, MAXDX);
+	this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -MAXDX * this.speed, MAXDX * this.speed);
 	this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
 	if ((wasleft && (this.velocity.x > 0)) ||
 	(wasright && (this.velocity.x < 0)))

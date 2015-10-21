@@ -37,7 +37,7 @@ var SCREEN_WIDTH = canvas.width;
 var SCREEN_HEIGHT = canvas.height;
 
 var LAYER_COUNT = 4;
-var MAP = { tw: 60, th: 30};
+var MAP = { tw: 1000, th: 30};
 var TILE = 16;
 var TILESET_TILE = TILE;
 var TILESET_PADDING = 0;
@@ -49,7 +49,9 @@ var TILESET_COUNT_Y = 22;
 var LAYER_BACKGOUND = 0;
 var LAYER_PLATFORMS = 1;
 var LAYER_OBJECT_ENEMIES = 2;
-var LAYER_OBJECT_TRIGGERS = 3;
+var LAYER_OBJECT_POWERUPS = 3;
+var LAYER_OBJECT_TRIGGERS = 4;
+var LAYER_OBJECT_WINTRIGGERS = 5;
 
 var worldOffsetX = 10;
 
@@ -141,7 +143,7 @@ function initialize()
 			{
 				var px = tileToPixel(x);
 				var py = tileToPixel(y);
-				enemies.push(new Enemy(px, py));
+				//enemies.push(new Enemy(px, py));
 			}
 			idx++;
 		}
@@ -246,7 +248,7 @@ function bound(value, min, max)
 
 
 // function draws map to screen. Is called every frame.
-function drawMap()
+function drawMap(deltaTime)
 {
 	var maxTiles = Math.floor(SCREEN_WIDTH / TILE) + 2;
 	var tileX = pixelToTile(player.position.x);
@@ -266,6 +268,7 @@ function drawMap()
 	}
 		
 		worldOffsetX = startX * TILE + offsetX;
+		
 	for( var layerIdx=0; layerIdx < LAYER_COUNT; layerIdx++ )
 	{
 		for( var y = 0; y < level1.layers[layerIdx].height; y++ )
@@ -313,7 +316,7 @@ function runGame(deltaTime)
 {
 	player.update(deltaTime);
 
-	drawMap();
+	drawMap(deltaTime);
 	
 	player.draw();
 
