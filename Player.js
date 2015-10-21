@@ -42,6 +42,8 @@ Player.prototype.update = function(deltaTime)
 		this.sprite.setAnimation(ANIM_WALK_RIGHT);
 	}
 	
+	 
+	
 	this.sprite.update(deltaTime);
 
 		
@@ -49,7 +51,15 @@ Player.prototype.update = function(deltaTime)
 	var right = false;
 	var jump = false;
 	
-	
+	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true)
+	 {
+		 right = true
+	 }
+	 
+	 else if (keyboard.isKeyDown(keyboard.KEY_LEFT) == true)
+	 {
+		 left = true
+	 }
 	
 	
 	var wasleft = this.velocity.x < 0;
@@ -170,5 +180,5 @@ Player.prototype.update = function(deltaTime)
 
 Player.prototype.draw = function()
 {
-	this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
+	this.sprite.draw(context, this.position.x - worldOffsetX - this.width, this.position.y - this.height);
 }
