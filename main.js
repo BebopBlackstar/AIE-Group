@@ -37,13 +37,13 @@ var SCREEN_WIDTH = canvas.width;
 var SCREEN_HEIGHT = canvas.height;
 
 var LAYER_COUNT = 2;
-var MAP = { tw: 60, th: 15};
-var TILE = 35;
-var TILESET_TILE = TILE * 2;
-var TILESET_PADDING = 2;
-var TILESET_SPACING = 2;
-var TILESET_COUNT_X = 14;
-var TILESET_COUNT_Y = 14;
+var MAP = { tw: 60, th: 30};
+var TILE = 16;
+var TILESET_TILE = TILE * 1;
+var TILESET_PADDING = 0;
+var TILESET_SPACING = 0;
+var TILESET_COUNT_X = 22;
+var TILESET_COUNT_Y = 16;
 
 // layer variables
 var LAYER_BACKGOUND = 0;

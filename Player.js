@@ -18,8 +18,8 @@ var Player = function()
 	}	
 	
 	
-	this.width = 100;
-	this.height = 100;
+	this.width = 36;
+	this.height = 48;
 	
 	this.position = new Vector2();
 	this.position.set(100, 100);
