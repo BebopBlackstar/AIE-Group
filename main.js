@@ -60,13 +60,13 @@ var GRAVITY = METER * 9.8 * 6;
  // max horizontal speed (10 tiles per second)
 var MAXDX = METER * 10;
  // max vertical speed (15 tiles per second)
-var MAXDY = METER * 15;
+var MAXDY = METER * 30;
  // horizontal acceleration - take 1/2 second to reach maxdx
 var ACCEL = MAXDX * 2;
  // horizontal friction - take 1/6 second to stop from maxdx
 var FRICTION = MAXDX * 6;
  // (a large) instantaneous jump impulse
-var JUMP = METER * 1500;
+var JUMP = METER * 3000;
 
 // enemy variables
 var ENEMY_MAXDX = METER * 5;

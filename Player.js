@@ -2,15 +2,17 @@
 var ANIM_WALK_RIGHT = 0;
 var ANIM_IDLE_RIGHT = 1;
 var ANIM_DEATH_RIGHT = 2;
+var ANIM_JUMP_RIGHT = 3;
 
-var ANIM_MAX = 3;
+var ANIM_MAX = 4;
 
 var Player = function() 
 {
 	this.sprite = new Sprite("skeleton.png");
-	this.sprite.buildAnimation(5, 4, 36, 48, 0.05,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-	this.sprite.buildAnimation(5, 4, 36, 48, 0.05,[10, 11, 12, 13]);
-	this.sprite.buildAnimation(5, 4, 36, 48, 0.05,[14, 15, 16, 17, 18]);
+	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[10, 11, 12, 13]);
+	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[14, 15, 16, 17, 18]);
+	this.sprite.buildAnimation(5, 4, 36, 48, 0.1, [0]);
 	
 	for(var i=0; i<ANIM_MAX; i++)
 	{
@@ -32,33 +34,41 @@ var Player = function()
 	this.jumping = false;
 	this.score = 0;
 	this.lives = 3;
+	this.sprite.setAnimation(ANIM_WALK_RIGHT);
 	};
 	
 	
 Player.prototype.update = function(deltaTime)
 {
-	if (this.sprite.currentanimation != ANIM_WALK_RIGHT)
-	{
-		this.sprite.setAnimation(ANIM_WALK_RIGHT);
-	}
+	
 	
 	 
 	
 	this.sprite.update(deltaTime);
+	
+	if (this.sprite.currentAnimation != ANIM_WALK_RIGHT && !falling && !this.jumping)
+	{
+		this.sprite.setAnimation(ANIM_WALK_RIGHT);
+	}
 
 		
 	var left = false;
 	var right = false;
 	var jump = false;
-	
-	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true)
+	right = true;
+	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true && !falling)
 	 {
 		 right = true
 	 }
 	 
-	 else if (keyboard.isKeyDown(keyboard.KEY_LEFT) == true)
+	 else if (keyboard.isKeyDown(keyboard.KEY_LEFT) == true && !falling && !this.jumping)
 	 {
 		 left = true
+	 }
+	 
+	 if (keyboard.isKeyDown(keyboard.KEY_SPACE) == true && !this.falling && !this.jumping)
+	 {
+		 jump = true
 	 }
 	
 	
@@ -80,10 +90,7 @@ Player.prototype.update = function(deltaTime)
 	{
 		// apply an instantaneous (large) vertical impulse
 		ddy = ddy - JUMP;
-		 this.jumping = true;
-		if(this.direction == LEFT)
-		this.sprite.setAnimation(ANIM_JUMP_LEFT)
-		else
+		this.jumping = true;
 		this.sprite.setAnimation(ANIM_JUMP_RIGHT)
 	}
 
@@ -180,5 +187,5 @@ Player.prototype.update = function(deltaTime)
 
 Player.prototype.draw = function()
 {
-	this.sprite.draw(context, this.position.x - worldOffsetX - this.width, this.position.y - this.height);
+	this.sprite.draw(context, this.position.x - worldOffsetX - this.width/2, this.position.y - this.height);
 }
