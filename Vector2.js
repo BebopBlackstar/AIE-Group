@@ -1,7 +1,7 @@
-var Vector2 = function() 
+var Vector2 = function(x, y) 
 {
-	this.x = 0;
-	this.y = 0;
+	this.x = x;
+	this.y = x;
 };
 
 Vector2.prototype.set = function(x,y)

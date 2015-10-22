@@ -10,8 +10,8 @@ var Player = function()
 {
 	this.sprite = new Sprite("skeleton.png");
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[10, 11, 12, 13]);
-	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[14, 15, 16, 17, 18]);
+	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[11, 12, 13, 14]);
+	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[15, 16, 17, 18, 19]);
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1, [0]);
 	
 	for(var i=0; i<ANIM_MAX; i++)
@@ -23,12 +23,12 @@ var Player = function()
 	this.width = 36;
 	this.height = 48;
 	
-	this.position = new Vector2();
-	this.position.set(10, 400);
+	this.position = new Vector2(10, 400);
+	this.position.set(100, 400);
 	
 	this.shootTimer = 0;
 	
-	this.velocity = new Vector2();
+	this.velocity = new Vector2(0, 0);
 		
 	this.falling = true;
 	this.jumping = false;
@@ -39,6 +39,9 @@ var Player = function()
 	
 	this.speed = 1;
 	this.distance = 0;
+	
+	//TODO score system
+	this.score = 0;
 	};
 	
 	
@@ -50,11 +53,11 @@ Player.prototype.update = function(deltaTime)
 	
 	this.speed = 1;
 	
-	 
 	
 	this.sprite.update(deltaTime);
 	
-	if (this.sprite.currentAnimation != ANIM_WALK_RIGHT && !falling && !this.jumping)
+	// sets animation back to walk if nothing special is happening. ie: player just jumped and no buttons pressed.
+	if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping)
 	{
 		this.sprite.setAnimation(ANIM_WALK_RIGHT);
 	}
@@ -63,31 +66,34 @@ Player.prototype.update = function(deltaTime)
 	var left = false;
 	var right = false;
 	var jump = false;
-	right = true;
+	//right = true;
+	
+	// player is always going right in our game.
+	var right = true
+	
 	
 	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true && !this.falling)
-	 {
-		 this.speed *= 1.25;
-	 }
+	{
+		this.speed *= 1.25;
+	}
 	 
-	 else if (keyboard.isKeyDown(keyboard.KEY_LEFT) == true && !this.falling)
-	 {
-		 this.speed *= 0.75;
-	 }
+	else if (keyboard.isKeyDown(keyboard.KEY_LEFT) == true )
+	{
+		this.speed = 0;
+		if (this.sprite.currentAnimation != ANIM_IDLE_RIGHT && !this.falling && !this.jumping)
+		{
+			this.sprite.setAnimation(ANIM_IDLE_RIGHT)
+		}
+	}
+	else if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping)
+	{
+		this.sprite.setAnimation(ANIM_WALK_RIGHT);
+	}
 	 
-	 if (keyboard.isKeyDown(keyboard.KEY_SPACE) == true && !this.falling && !this.jumping)
-	 {
-		 jump = true
-	 }
-	 
-	 // hack to fly. I need it. hold down ~ and 0
-	 if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_0) == true)
-	 {
-		this.position.y = 20
-	 }
-	 
-	 
-	
+	if (keyboard.isKeyDown(keyboard.KEY_SPACE) == true && !this.falling && !this.jumping)
+	{
+		jump = true
+	}
 	
 	var wasleft = this.velocity.x < 0;
 	var wasright = this.velocity.x > 0;
@@ -184,6 +190,10 @@ Player.prototype.update = function(deltaTime)
 			// clamp the x position to avoid moving into the platform we just hit
 			this.position.x = tileToPixel(tx);
 			this.velocity.x = 0; // stop horizontal velocity
+			if (this.sprite.currentAnimation != ANIM_IDLE_RIGHT)
+			{
+				this.sprite.setAnimation(ANIM_IDLE_RIGHT);
+			}
 		}
 	}
 	else if (this.velocity.x < 0) 
@@ -196,6 +206,13 @@ Player.prototype.update = function(deltaTime)
 		}
 	}
 	
+	
+	// hack to fly. I need it. hold down ~ and 0
+	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_0) == true)
+	{
+		this.position.y = 20
+	}
+	
 
 }
 
@@ -204,5 +221,5 @@ Player.prototype.update = function(deltaTime)
 
 Player.prototype.draw = function()
 {
-	this.sprite.draw(context, this.position.x - worldOffsetX - this.width/2, this.position.y - this.height);
+	this.sprite.draw(context, this.position.x - this.width/2 - camera.worldOffsetX , this.position.y - this.height);
 }
