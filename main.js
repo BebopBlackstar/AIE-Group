@@ -108,6 +108,9 @@ logo.src ="templogo.png";
 var tileset = document.createElement("img");
 tileset.src = "tileset.png";
 
+var background = document.createElement("img");
+background.src = "caveedited.png";
+//background.width = 1600
 
 
 var cells = []; // the array that holds our simplified collision data
@@ -288,7 +291,10 @@ function runSplash(deltaTime)
 
 function runGame(deltaTime)
 {
-	context.drawImage(logo, 640 - camera.origin.x, 10)
+	context.drawImage(background, -camera.origin.x%(background.width*3)/3, 0)
+	context.drawImage(background, -camera.origin.x%(background.width*3)/3 + background.width, 0)
+
+	context.drawImage(logo, 640 - camera.origin.x, 100)
 
 	player.update(deltaTime);
 
