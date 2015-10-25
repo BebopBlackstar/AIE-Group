@@ -154,7 +154,7 @@ function initialize()
 			{
 				var px = tileToPixel(x);
 				var py = tileToPixel(y);
-				//enemies.push(new Enemy(px, py));
+				enemies.push(new Enemy(px, py));
 			}
 			idx++;
 		}
@@ -297,12 +297,22 @@ function runGame(deltaTime)
 	context.drawImage(logo, 640 - camera.origin.x, 100)
 
 	player.update(deltaTime);
+	
+	for (var i = 0; i < enemies.length; i++)
+	{
+		enemies[i].update(deltaTime);
+	}
 
 	camera.generateMap();
 	
 	//drawMap(deltaTime);
 	
 	player.draw();
+	
+	for (var i = 0; i < enemies.length; i++)
+	{
+		enemies[i].draw(deltaTime);
+	}
 	
 	if (camera.origin.x - player.position.x > 0)
 	{
