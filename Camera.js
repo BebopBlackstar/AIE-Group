@@ -13,10 +13,20 @@ var Camera = function()
 
 Camera.prototype.generateMap = function()
 {
-
-	this.speed = 4;
+	// first if statement stops the camera moving at the end of the level.
+	if (this.origin.x <= MAP.tw*TILE-this.width)
+	{
+		// speeds up camera if player is moving to the right at the edge of screen
+		if (player.position.x - this.origin.x > 600)
+		{
+			this.speed = 6;
+		}
+		else
+		{
+			this.speed = 4;	
+		}
 	this.origin.x += this.speed;
-
+	}
 	
 	var maxTiles = Math.floor(SCREEN_WIDTH / TILE) + 2;
 	var tileX = pixelToTile(this.origin.x);
@@ -52,7 +62,7 @@ Camera.prototype.generateMap = function()
 					var tileIndex = level1.layers[layerIdx].data[idx] - 1;
 					var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) *(TILESET_TILE + TILESET_SPACING);
 					var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_X)) * (TILESET_TILE + TILESET_SPACING);
-					context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, (x-startX)*TILE - offsetX, (y-1)*TILE, TILESET_TILE, TILESET_TILE);
+					context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, (x-startX)*TILE - offsetX, (y-1)*TILE + TILE, TILESET_TILE, TILESET_TILE);
 				}
 				idx++;
 			}

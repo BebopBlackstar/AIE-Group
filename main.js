@@ -47,11 +47,11 @@ var TILESET_COUNT_Y = 22;
 
 // layer variables
 var LAYER_BACKGOUND = 0;
-var LAYER_PLATFORMS = 1;
-var LAYER_OBJECT_ENEMIES = 2;
-var LAYER_OBJECT_POWERUPS = 3;
-var LAYER_OBJECT_TRIGGERS = 4;
-var LAYER_OBJECT_WINTRIGGERS = 5;
+var LAYER_BACKGOUND2 = 1;
+var LAYER_PLATFORMS = 2;
+var LAYER_OBJECT_ENEMIES = 3;
+var LAYER_OBJECT_POWERUPS = 4;
+var LAYER_OBJECT_TRIGGERS = 5;
 
 var worldOffsetX = 10;
 
@@ -120,7 +120,7 @@ function initialize()
 	{ // initialize the collision map
 		cells[layerIdx] = [];
 		var idx = 0;
-		for(var y = 0; y < level1.layers[layerIdx].height; y++) 
+		for(var y = 1; y < level1.layers[layerIdx].height; y++) 
 		{
 			cells[layerIdx][y] = [];
 			for(var x = 0; x < level1.layers[layerIdx].width; x++) 
@@ -223,7 +223,7 @@ function cellAtPixelCoord(layer, x,y)
 
 function cellAtTileCoord(layer, tx, ty)
 {
-	if(tx<0 || tx>=MAP.tw || ty<0)
+	if(tx<0 || tx>=MAP.tw || ty<=0)
 	return 1;
 	// let the player drop of the bottom of the screen (this means death)
 	if(ty>=MAP.th)
@@ -294,7 +294,7 @@ function runGame(deltaTime)
 	context.drawImage(background, -camera.origin.x%(background.width*3)/3, 0)
 	context.drawImage(background, -camera.origin.x%(background.width*3)/3 + background.width, 0)
 
-	context.drawImage(logo, 640 - camera.origin.x, 100)
+	context.drawImage(logo, 500 - camera.origin.x, 100)
 
 	player.update(deltaTime);
 	

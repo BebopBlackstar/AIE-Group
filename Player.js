@@ -1,4 +1,3 @@
-
 var ANIM_WALK_RIGHT = 0;
 var ANIM_IDLE_RIGHT = 1;
 var ANIM_DEATH_RIGHT = 2;
@@ -72,11 +71,12 @@ Player.prototype.update = function(deltaTime)
 	var right = true
 	
 	
+	
 	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true && !this.falling)
 	{
 		this.speed *= 1.25;
 	}
-	 
+
 	else if (keyboard.isKeyDown(keyboard.KEY_LEFT) == true )
 	{
 		this.speed = 0;
@@ -85,15 +85,18 @@ Player.prototype.update = function(deltaTime)
 			this.sprite.setAnimation(ANIM_IDLE_RIGHT)
 		}
 	}
+	
 	else if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping)
 	{
 		this.sprite.setAnimation(ANIM_WALK_RIGHT);
 	}
-	 
+	
 	if (keyboard.isKeyDown(keyboard.KEY_SPACE) == true && !this.falling && !this.jumping)
 	{
 		jump = true
 	}
+	
+
 	
 	var wasleft = this.velocity.x < 0;
 	var wasright = this.velocity.x > 0;
@@ -183,6 +186,7 @@ Player.prototype.update = function(deltaTime)
 			ny = 0; // player no longer overlaps the cells below
 		}
 	}
+
 	if (this.velocity.x > 0) 
 	{
 		if ((cellright && !cell) || (celldiag && !celldown && ny)) 
@@ -206,11 +210,28 @@ Player.prototype.update = function(deltaTime)
 		}
 	}
 	
+
+	
 	
 	// hack to fly. I need it. hold down ~ and 0
 	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_0) == true)
 	{
-		this.position.y = 20
+		this.position.y = -50;
+	}
+	
+	// hack to shortcut to end of level
+	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_9) == true)
+	{
+		this.position.x = 905*TILE
+		camera.origin.x = 900*TILE
+	}
+	
+	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_8) == true)
+	{
+		this.position.y = -50;
+		this.position.x = 380* TILE;
+		camera.origin.x = 370*TILE
+
 	}
 	
 
