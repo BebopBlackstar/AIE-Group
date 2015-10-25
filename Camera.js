@@ -47,7 +47,7 @@ Camera.prototype.generateMap = function()
 		
 		this.worldOffsetX = startX * TILE + offsetX;
 		
-	for( var layerIdx=0; layerIdx < LAYER_COUNT; layerIdx++ )
+	for( var layerIdx=0; layerIdx < 3; layerIdx++ )
 	{
 		for( var y = 0; y < level1.layers[layerIdx].height; y++ )
 		{
