@@ -110,7 +110,9 @@ tileset.src = "tileset.png";
 
 var background = document.createElement("img");
 background.src = "caveedited.png";
-//background.width = 1600
+
+var fireEmitter = createFireEmitter("fire.png", (SCREEN_WIDTH/4)*3, SCREEN_HEIGHT-100);
+
 
 
 var cells = []; // the array that holds our simplified collision data
@@ -302,6 +304,8 @@ function runGame(deltaTime)
 	{
 		enemies[i].update(deltaTime);
 	}
+	
+	
 
 	camera.generateMap();
 	
@@ -321,7 +325,8 @@ function runGame(deltaTime)
 		gameState = STATE_SPLASH;
 	}
 	
-	
+	fireEmitter.update(deltaTime, player.position.x - camera.worldOffsetX - player.width/2, player.position.y - player.height);
+	fireEmitter.draw();
 
 
 	// update the frame counter

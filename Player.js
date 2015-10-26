@@ -233,6 +233,31 @@ Player.prototype.update = function(deltaTime)
 		camera.origin.x = 370*TILE
 
 	}
+	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_8) == true)
+	{
+		this.position.y = -50;
+		this.position.x = 380* TILE;
+		camera.origin.x = 370*TILE
+	}
+	
+	
+	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_2) == true)
+	{
+		this.position.y = 432;
+		this.position.x = 5280;
+		camera.origin.x = 5296 - 500;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_3) == true)
+	{
+		this.position.y = 432;
+		this.position.x = 7834;
+		camera.origin.x = 7834 - 500;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_1) == true)
+	{
+		//"Put a breakpoint here to freeze the game at will"
+		var freezethegamehere = 1;
+	}
 	
 
 }
