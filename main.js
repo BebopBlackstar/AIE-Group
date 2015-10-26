@@ -62,7 +62,7 @@ var GRAVITY = METER * 9.8 * 6;
  // max horizontal speed (10 tiles per second)
 var MAXDX = METER * 10;
  // max vertical speed (15 tiles per second)
-var MAXDY = METER * 30;
+var MAXDY = METER* 30;
  // horizontal acceleration - take 1/2 second to reach maxdx
 var ACCEL = MAXDX * 2;
  // horizontal friction - take 1/6 second to stop from maxdx
@@ -153,7 +153,7 @@ function initialize()
 			if(level1.layers[LAYER_OBJECT_ENEMIES].data[idx] != 0) 
 			{
 				var px = tileToPixel(x);
-				var py = tileToPixel(y);
+				var py = tileToPixel(y + 0.9);
 				enemies.push(new Enemy(px, py));
 			}
 			idx++;
@@ -256,7 +256,7 @@ function resetGame()
 	//highScore = player.score;
 	player = new Player();
 	camera = new Camera();
-	//enemies.splice(0, enemies.length);
+	enemies.splice(0, enemies.length);
 	initialize();
 }
 
@@ -312,6 +312,7 @@ function runGame(deltaTime)
 	for (var i = 0; i < enemies.length; i++)
 	{
 		enemies[i].draw(deltaTime);
+
 	}
 	
 	if (camera.origin.x - player.position.x > 0)

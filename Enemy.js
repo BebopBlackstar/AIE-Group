@@ -20,7 +20,7 @@ var Enemy = function(x, y)
 	this.position = new Vector2();
 	this.position.set(x, y);
 	
-	this.velocity = new Vector2();
+	this.velocityX = 0;
 	
 	this.moveRight = true;
 	this.pause = 0;
@@ -46,30 +46,34 @@ Enemy.prototype.update = function(deltaTime)
 		var ty = pixelToTile(this.position.y);
 		var nx = (this.position.x) % TILE;		//true if enemy overlaps right
 		var ny = (this.position.y) % TILE;		//true if enemy overlaps below
-		var cell = cellAtTileCoord(LAYER_PLATFORMS, tx, ty);
-		var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
-		var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);
-		var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx +1, ty + 1);
-	
+		var cell = cellAtTileCoord(LAYER_PLATFORMS, tx , ty + 1);
+		var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 2, ty + 1);
+		var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 2);
+		var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 2, ty + 2);
+		
+		
+		
 		if(this.moveRight)
 		{
 			this.sprite.setAnimation(ANIM_ENEMY_RIGHT);
 			
 			if(celldiag && !cellright)
 			{
+				this.sprite.setAnimation(ANIM_ENEMY_RIGHT);
 				ddx = ddx + ENEMY_ACCEL;	//enemy wants to go right
 				
 			}
 			
+			
 			else
 			{
-				this.velocity.x = 0;
+				this.velocityX = 0;
 				this.moveRight = false;
 				this.pause = 0.5;
 			}
 		}
 		
-		if(!this.moveRight)
+		else
 		{
 			this.sprite.setAnimation(ANIM_ENEMY_LEFT);
 			
@@ -82,19 +86,20 @@ Enemy.prototype.update = function(deltaTime)
 			
 			else
 			{
-				this.velocity.x = 0;
+				this.velocityX = 0;
 				this.moveRight = true;
 				this.pause = 0.5;
 			}
 		}
 		
-		this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
-		this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -ENEMY_MAXDX, ENEMY_MAXDX);
+		this.position.x = Math.floor(this.position.x + (deltaTime * this.velocityX));
+		this.velocityX = bound(this.velocityX + (deltaTime * ddx), -ENEMY_MAXDX, ENEMY_MAXDX);
+	
 	
 	}
 }
 
 Enemy.prototype.draw = function(deltaTime)
 {
-	this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
+	this.sprite.draw(context, this.position.x - camera.worldOffsetX, this.position.y);
 }
