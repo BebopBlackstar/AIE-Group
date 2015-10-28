@@ -304,7 +304,10 @@ function runGame(deltaTime)
 	}
 	
 	
-	camera.updateCamera(deltaTime);
+	if(player.dead == false)
+	{
+		camera.updateCamera(deltaTime);
+	}
 	camera.generateMap(deltaTime);
 	
 	//drawMap(deltaTime);

@@ -31,6 +31,7 @@ var Player = function()
 		
 	this.falling = true;
 	this.jumping = false;
+	this.dead = false;
 	this.score = 0;
 	this.lives = 3;
 	this.sprite.setAnimation(ANIM_WALK_RIGHT);
@@ -91,7 +92,7 @@ Player.prototype.update = function(deltaTime)
 		this.sprite.setAnimation(ANIM_WALK_RIGHT);
 	}
 	
-	if (keyboard.isKeyDown(keyboard.KEY_SPACE) == true && !this.falling && !this.jumping)
+	if (keyboard.isKeyDown(keyboard.KEY_SPACE) == true && !this.falling && !this.jumping && this.dead == false)
 	{
 		jump = true
 	}
@@ -216,6 +217,7 @@ Player.prototype.update = function(deltaTime)
 			this.velocity.x = 0;
 			this.jumping = false;
 			this.falling = true;
+			this.dead = true;
 			if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)
 			{
 				this.sprite.setAnimation(ANIM_DEATH_RIGHT);
