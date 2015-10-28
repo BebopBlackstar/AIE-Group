@@ -167,15 +167,15 @@ function createFlyingStarsEmitter(particleTexture, posX, posY)
 function createFireWallEmitter(particleTexture, posX, posY)
 {
 	var e = new Emitter(particleTexture, posX, posY);
-	e.emissionSize.set(50, 480);
+	e.emissionSize.set(1, 480);
 	e.emissionRate = 100.0;
 	e.minLife = 2.0;
 	e.maxLife = 7.0;
 	e.transparency = 0.20;
 	e.minVelocity.x = 0.0;
-	e.maxVelocity.x = 0.0;
-	e.minVelocity.y = 75.0;
-	e.maxVelocity.y = 100.0;
+	e.maxVelocity.x = 250;
+	e.minVelocity.y = 0;
+	e.maxVelocity.y = 0;
 	e.transparency = 0.5;
 	return e;
 }

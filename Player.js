@@ -226,27 +226,51 @@ Player.prototype.update = function(deltaTime)
 
 	
 	
-	// hack to fly. I need it. hold down ~ and 0
-	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_0) == true)
+	// Hacks and "Checkpoints"
+	if (keyboard.isKeyDown(keyboard.KEY_0) == true)
 	{
 		this.position.y = -50;
 	}
+	if (keyboard.isKeyDown(keyboard.KEY_1) == true)
+	{
+		//"Put a breakpoint here to freeze the game at will"
+		var freezethegamehere = 1;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_2) == true)
+	{
+		this.position.y = 432;
+		this.position.x = 5280;
+		camera.origin.x = 5296 - 500;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_3) == true)
+	{
+		this.position.y = 432;
+		this.position.x = 7834;
+		camera.origin.x = 7834 - 500;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_4) == true)
+	{
+		this.position.y = 432;
+		this.position.x = 8600;
+		camera.origin.x = 8600 - 500;
+	}
+	
 	
 	// hack to shortcut to end of level
-	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_9) == true)
+	if (keyboard.isKeyDown(keyboard.KEY_9) == true)
 	{
 		this.position.x = 905*TILE
 		camera.origin.x = 900*TILE
 	}
 	
-	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_8) == true)
+	if (keyboard.isKeyDown(keyboard.KEY_8) == true)
 	{
 		this.position.y = -50;
 		this.position.x = 380* TILE;
 		camera.origin.x = 370*TILE
 
 	}
-	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_8) == true)
+	if (keyboard.isKeyDown(keyboard.KEY_8) == true)
 	{
 		this.position.y = -50;
 		this.position.x = 380* TILE;
@@ -254,23 +278,9 @@ Player.prototype.update = function(deltaTime)
 	}
 	
 	
-	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_2) == true)
-	{
-		this.position.y = 432;
-		this.position.x = 5280;
-		camera.origin.x = 5296 - 500;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_3) == true)
-	{
-		this.position.y = 432;
-		this.position.x = 7834;
-		camera.origin.x = 7834 - 500;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true && keyboard.isKeyDown(keyboard.KEY_1) == true)
-	{
-		//"Put a breakpoint here to freeze the game at will"
-		var freezethegamehere = 1;
-	}
+	
+	
+	
 	
 
 }
