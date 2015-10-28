@@ -346,7 +346,12 @@ function runGame(deltaTime)
 	// draw the FPS
 	context.fillStyle = "#f00";
 	context.font="14px Arial";
-	context.fillText("FPS: " + fps, 5, 20, 100);	
+	context.fillText("FPS: " + fps, 5, 20, 100);
+
+	context.fillStyle = "white";
+	context.font="32px Yu Gothic";
+	var scoreText = "Score: " + player.score;
+	context.fillText(scoreText, 400, 50);
 	
 }
 

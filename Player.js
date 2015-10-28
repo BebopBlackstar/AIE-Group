@@ -20,6 +20,7 @@ var Player = function()
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[11, 12, 13, 14]);
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.25,[15, 16, 17, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19]);
+
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1, [0]);
 	
 	for(var i=0; i<ANIM_MAX; i++)
@@ -182,6 +183,7 @@ Player.prototype.movement = function(deltaTime)
 	this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
 	this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -MAXDX * this.speed, MAXDX * this.speed);
 	this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
+	this.score = this.position.x;
 	if ((wasleft && (this.velocity.x > 0)) ||
 	(wasright && (this.velocity.x < 0)))
 	{
@@ -333,6 +335,7 @@ Player.prototype.movement = function(deltaTime)
 	
 	
 }
+
 
 
 
