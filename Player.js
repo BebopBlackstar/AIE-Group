@@ -5,12 +5,21 @@ var ANIM_JUMP_RIGHT = 3;
 
 var ANIM_MAX = 4;
 
+var RUN = 1;
+var DEAD = 2;
+var SPEED_BOOST = 3;
+var SPEED_SLOW = 4;
+var JUMP_BOOST = 5;
+var JUMP_PENALTY = 6;
+var STUCK_RUNNING = 7;
+var CONTINOUS_JUMPING = 8;
+
 var Player = function() 
 {
 	this.sprite = new Sprite("skeleton.png");
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[11, 12, 13, 14]);
-	this.sprite.buildAnimation(5, 4, 36, 48, 0.25,[15, 16, 17, 18, 19]);
+	this.sprite.buildAnimation(5, 4, 36, 48, 0.25,[15, 16, 17, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19]);
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1, [0]);
 	
 	for(var i=0; i<ANIM_MAX; i++)
@@ -42,48 +51,74 @@ var Player = function()
 	
 	//TODO score system
 	this.score = 0;
+	this.playerState = RUN
 	this.dead = false;
 	};
 	
 	
 Player.prototype.update = function(deltaTime)
 {
-	switch(this.dead)
+	switch(this.playerState)
 	{
-		case true:
+		case DEAD:
+			
 			if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)
 			this.sprite.setAnimation(ANIM_DEATH_RIGHT);
+		
+			this.movement(deltaTime);
+			this.sprite.update(deltaTime);
+
+
 		break;
 		
-		case false:
-	
-	this.speed = 1;
-	
-	
-	
-	// sets animation back to walk if nothing special is happening. ie: player just jumped and no buttons pressed.
+		case RUN:
+			this.speed = 1;
+			this.right = true;
+			this.sprite.update(deltaTime);
+			
+			this.animations(deltaTime);
+			this.movement(deltaTime);
+		break;
+		
+		case SPEED_BOOST:
+			this.speed = 1;
+			this.right = true;
+			this.sprite.update(deltaTime);
+			
+			this.animations(deltaTime);
+			this.movement(deltaTime);
+			
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Player.prototype.animations = function(deltaTime)
+{
+	this.left = false;
+	this.right = false;
+	this.jump = false;
 	if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping)
 	{
 		this.sprite.setAnimation(ANIM_WALK_RIGHT);
 	}
-
-		
-	var left = false;
-	var right = false;
-	var jump = false;
-	//right = true;
+	this.right = true
+	// sets animation back to walk if nothing special is happening. ie: player just jumped and no buttons pressed.
 	
-	// player is always going right in our game.
-	
-	
-	if (this.dead == true)
-	{
-		
-	}
-	else
-	{
-		var right = true
-	}
 	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true && !this.falling && !this.dead)
 	{
 		this.speed *= 1.25;
@@ -105,28 +140,30 @@ Player.prototype.update = function(deltaTime)
 	
 	if (keyboard.isKeyDown(keyboard.KEY_SPACE) == true && !this.falling && !this.jumping && this.dead == false)
 	{
-		jump = true
+		this.jump = true
 	}
-	break;
-	}
-	this.sprite.update(deltaTime);
-
+}
+Player.prototype.movement = function(deltaTime)
+{
 	
+	//right = true;
+	
+	// player is always going right in our game.
 	var wasleft = this.velocity.x < 0;
 	var wasright = this.velocity.x > 0;
 	var falling = this.falling;
 	var ddx = 0; // acceleration
 	var ddy = GRAVITY;
 
-	if (left)
+	if (this.left)
 	ddx = ddx - ACCEL; // player wants to go left
 	else if (wasleft)
 	ddx = ddx + FRICTION; // player was going left, but not any more
-	if (right)
+	if (this.right)
 	ddx = ddx + ACCEL; // player wants to go right
 	else if (wasright)
 	ddx = ddx - FRICTION; // player was going right, but not any more
-	if (jump && !this.jumping && !falling)
+	if (this.jump && !this.jumping && !falling)
 	{
 		// apply an instantaneous (large) vertical impulse
 		ddy = ddy - JUMP;
@@ -163,7 +200,7 @@ Player.prototype.update = function(deltaTime)
 	// collision detection engine by simply looking at the 1 to 4 cells that
 	// the player occupies:
 	var tx = pixelToTile(this.position.x);
-	var ty = pixelToTile(this.position.y);
+	var ty = bound(pixelToTile(this.position.y), 1, 30);
 	var nx = (this.position.x)%TILE; // true if player overlaps right
 	var ny = (this.position.y)%TILE; // true if player overlaps below
 	var cell = cellAtTileCoord(LAYER_PLATFORMS, tx, ty);
@@ -295,10 +332,7 @@ Player.prototype.update = function(deltaTime)
 	
 	
 	
-
 }
-
-
 
 
 

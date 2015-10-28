@@ -165,7 +165,7 @@ function initialize()
 	
 	cells[LAYER_OBJECT_TRIGGERS] = [];
 	idx = 0;
-	for(var y = 0; y < level1.layers[LAYER_OBJECT_TRIGGERS].height; y++) 
+	for(var y = 1; y < level1.layers[LAYER_OBJECT_TRIGGERS].height; y++) 
 	{
 		cells[LAYER_OBJECT_TRIGGERS][y] = [];
 		for(var x = 0; x < level1.layers[LAYER_OBJECT_TRIGGERS].width; x++) 
@@ -295,7 +295,10 @@ function runGame(deltaTime)
 	context.drawImage(background, -camera.origin.x%(background.width*3)/3 + background.width, 0)
 
 	context.drawImage(logo, 500 - camera.origin.x, 100)
-	
+	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true)
+	{
+		deltaTime = 0.01;
+	}
 	
 	for (var i = 0; i < enemies.length; i++)
 	{
