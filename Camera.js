@@ -11,23 +11,27 @@ var Camera = function()
 	this.speed = 3;
 }
 
-Camera.prototype.generateMap = function()
+Camera.prototype.updateCamera = function(deltaTime)
 {
-	// first if statement stops the camera moving at the end of the level.
 	if (this.origin.x <= MAP.tw*TILE-this.width)
 	{
 		// speeds up camera if player is moving to the right at the edge of screen
 		if (player.position.x - this.origin.x > 600)
 		{
-			this.speed = 6;
+			this.speed = 6 * deltaTime * 60;
 		}
 		else
 		{
-			this.speed = 4;	
+			this.speed = 4 * deltaTime * 60;	
 		}
 	this.origin.x += this.speed;
 	}
 	
+}
+
+Camera.prototype.generateMap = function(deltaTime)
+{
+	// first if statement stops the camera moving at the end of the level.
 	var maxTiles = Math.floor(SCREEN_WIDTH / TILE) + 2;
 	var tileX = pixelToTile(this.origin.x);
 	var offsetX = TILE + Math.floor(this.origin.x%TILE);
@@ -47,7 +51,7 @@ Camera.prototype.generateMap = function()
 		
 		this.worldOffsetX = startX * TILE + offsetX;
 		
-	for( var layerIdx=0; layerIdx < 3; layerIdx++ )
+	for( var layerIdx=0; layerIdx < LAYER_COUNT; layerIdx++ )
 	{
 		for( var y = 0; y < level1.layers[layerIdx].height; y++ )
 		{
@@ -56,13 +60,16 @@ Camera.prototype.generateMap = function()
 			{
 				if( level1.layers[layerIdx].data[idx] != 0 )
 				{
-					// the tiles in the Tiled map are base 1 (meaning a value of 0 means no tile),
-					// so subtract one from the tileset id to get the
-					// correct tile
-					var tileIndex = level1.layers[layerIdx].data[idx] - 1;
-					var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) *(TILESET_TILE + TILESET_SPACING);
-					var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_X)) * (TILESET_TILE + TILESET_SPACING);
-					context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, (x-startX)*TILE - offsetX, (y-1)*TILE + TILE, TILESET_TILE, TILESET_TILE);
+					if (level1.layers[layerIdx].visible == true)
+					{
+						// the tiles in the Tiled map are base 1 (meaning a value of 0 means no tile),
+						// so subtract one from the tileset id to get the
+						// correct tile
+						var tileIndex = level1.layers[layerIdx].data[idx] - 1;
+						var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) *(TILESET_TILE + TILESET_SPACING);
+						var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_X)) * (TILESET_TILE + TILESET_SPACING);
+						context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, (x-startX)*TILE - offsetX, (y-1)*TILE + TILE, TILESET_TILE, TILESET_TILE);
+					}
 				}
 				idx++;
 			}

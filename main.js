@@ -36,7 +36,7 @@ function getDeltaTime()
 var SCREEN_WIDTH = canvas.width;
 var SCREEN_HEIGHT = canvas.height;
 
-var LAYER_COUNT = 4;
+var LAYER_COUNT = 6;
 var MAP = { tw: 1000, th: 30};
 var TILE = 16;
 var TILESET_TILE = TILE;
@@ -112,6 +112,7 @@ var background = document.createElement("img");
 background.src = "caveedited.png";
 
 var fireEmitter = createFireEmitter("fire.png", (SCREEN_WIDTH/4)*3, SCREEN_HEIGHT-100);
+var fireWallEmitter = createFireWallEmitter("fire.png", 0, 0);
 
 
 
@@ -306,8 +307,8 @@ function runGame(deltaTime)
 	}
 	
 	
-
-	camera.generateMap();
+	camera.updateCamera(deltaTime);
+	camera.generateMap(deltaTime);
 	
 	//drawMap(deltaTime);
 	
@@ -328,6 +329,8 @@ function runGame(deltaTime)
 	fireEmitter.update(deltaTime, player.position.x - player.width/2, player.position.y - player.height);
 	fireEmitter.draw();
 
+	fireWallEmitter.update(deltaTime, camera.origin.x + 50,640);
+	fireWallEmitter.draw();
 
 	// update the frame counter
 	fpsTime += deltaTime;
