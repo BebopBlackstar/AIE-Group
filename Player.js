@@ -210,6 +210,17 @@ Player.prototype.update = function(deltaTime)
 		}
 	}
 	
+	
+	if(cellAtTileCoord(LAYER_OBJECT_TRIGGERS, tx, ty) == true)
+	{
+			this.velocity.x = 0;
+			this.jumping = false;
+			this.falling = true;
+			if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)
+			{
+				this.sprite.setAnimation(ANIM_DEATH_RIGHT);
+			}
+	}
 
 	
 	

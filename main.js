@@ -173,9 +173,6 @@ function initialize()
 			if(level1.layers[LAYER_OBJECT_TRIGGERS].data[idx] != 0) 
 			{
 				cells[LAYER_OBJECT_TRIGGERS][y][x] = 1;
-				cells[LAYER_OBJECT_TRIGGERS][y-1][x] = 1;
-				cells[LAYER_OBJECT_TRIGGERS][y-1][x+1] = 1;
-				cells[LAYER_OBJECT_TRIGGERS][y][x+1] = 1;
 			}
 			else if(cells[LAYER_OBJECT_TRIGGERS][y][x] != 1) 
 			{
