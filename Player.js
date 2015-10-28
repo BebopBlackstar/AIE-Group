@@ -10,7 +10,7 @@ var Player = function()
 	this.sprite = new Sprite("skeleton.png");
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[11, 12, 13, 14]);
-	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[15, 16, 17, 18, 19]);
+	this.sprite.buildAnimation(5, 4, 36, 48, 0.25,[15, 16, 17, 18, 19]);
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1, [0]);
 	
 	for(var i=0; i<ANIM_MAX; i++)
@@ -42,19 +42,24 @@ var Player = function()
 	
 	//TODO score system
 	this.score = 0;
+	this.dead = false;
 	};
 	
 	
 Player.prototype.update = function(deltaTime)
 {
-	// TEMPORARY SPEED MULTIPLIER AND DISTANCE
-	//this.distance += deltaTime/60;
-	//this.speed = 1 + this.distance;
+	switch(this.dead)
+	{
+		case true:
+			if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)
+			this.sprite.setAnimation(ANIM_DEATH_RIGHT);
+		break;
+		
+		case false:
 	
 	this.speed = 1;
 	
 	
-	this.sprite.update(deltaTime);
 	
 	// sets animation back to walk if nothing special is happening. ie: player just jumped and no buttons pressed.
 	if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping)
@@ -69,11 +74,17 @@ Player.prototype.update = function(deltaTime)
 	//right = true;
 	
 	// player is always going right in our game.
-	var right = true
 	
 	
-	
-	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true && !this.falling)
+	if (this.dead == true)
+	{
+		
+	}
+	else
+	{
+		var right = true
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true && !this.falling && !this.dead)
 	{
 		this.speed *= 1.25;
 	}
@@ -96,7 +107,9 @@ Player.prototype.update = function(deltaTime)
 	{
 		jump = true
 	}
-	
+	break;
+	}
+	this.sprite.update(deltaTime);
 
 	
 	var wasleft = this.velocity.x < 0;
@@ -284,6 +297,7 @@ Player.prototype.update = function(deltaTime)
 	
 
 }
+
 
 
 

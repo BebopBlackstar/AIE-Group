@@ -310,7 +310,7 @@ function runGame(deltaTime)
 	camera.generateMap(deltaTime);
 	
 	//drawMap(deltaTime);
-	
+	player.update(deltaTime);
 	player.draw();
 	
 	for (var i = 0; i < enemies.length; i++)
@@ -329,7 +329,7 @@ function runGame(deltaTime)
 	//fireEmitter.draw();
 
 	fireWallEmitter.update(deltaTime, camera.origin.x + 50,640);
-	fireWallEmitter.draw();
+	//fireWallEmitter.draw();
 
 	// update the frame counter
 	fpsTime += deltaTime;
