@@ -295,8 +295,14 @@ function runGame(deltaTime)
 	context.drawImage(background, -camera.origin.x%(background.width*3)/3 + background.width, 0)
 
 	context.drawImage(logo, 500 - camera.origin.x, 100)
+	
+	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) != true)
+	{
+		camera.updateCamera(deltaTime);
+		player.update(deltaTime);
 
-	player.update(deltaTime);
+	}
+
 	
 	for (var i = 0; i < enemies.length; i++)
 	{
@@ -304,7 +310,6 @@ function runGame(deltaTime)
 	}
 	
 	
-	camera.updateCamera(deltaTime);
 	camera.generateMap(deltaTime);
 	
 	//drawMap(deltaTime);
@@ -324,7 +329,7 @@ function runGame(deltaTime)
 	}
 	
 	fireEmitter.update(deltaTime, player.position.x - player.width/2, player.position.y - player.height);
-	fireEmitter.draw();
+	//fireEmitter.draw();
 
 	fireWallEmitter.update(deltaTime, camera.origin.x + 50,640);
 	fireWallEmitter.draw();
