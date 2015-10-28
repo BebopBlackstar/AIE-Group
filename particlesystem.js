@@ -95,7 +95,7 @@ Emitter.prototype.draw = function()
 		context.translate(p.position.x, p.position.y);
 		context.rotate(p.rotation);
 		context.globalAlpha = p.alpha;
-		context.drawImage(this.texture, origin.x * scale.x, origin.y * scale.y, p.size.x, p.size.y);
+		context.drawImage(this.texture, origin.x * scale.x - camera.origin.x, origin.y * scale.y, p.size.x, p.size.y);
 		context.restore();		
 	}
 }

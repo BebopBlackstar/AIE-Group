@@ -325,7 +325,7 @@ function runGame(deltaTime)
 		gameState = STATE_SPLASH;
 	}
 	
-	fireEmitter.update(deltaTime, player.position.x - camera.worldOffsetX - player.width/2, player.position.y - player.height);
+	fireEmitter.update(deltaTime, player.position.x - player.width/2, player.position.y - player.height);
 	fireEmitter.draw();
 
 
