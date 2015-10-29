@@ -113,10 +113,11 @@ Player.prototype.animations = function(deltaTime)
 	this.left = false;
 	this.right = false;
 	this.jump = false;
-	if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping)
+	if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping && !this.dead)
 	{
 		this.sprite.setAnimation(ANIM_WALK_RIGHT);
 	}
+	if (!this.dead)
 	this.right = true
 	// sets animation back to walk if nothing special is happening. ie: player just jumped and no buttons pressed.
 	
@@ -144,6 +145,9 @@ Player.prototype.animations = function(deltaTime)
 		this.jump = true
 	}
 }
+
+
+
 Player.prototype.movement = function(deltaTime)
 {
 	
@@ -266,14 +270,7 @@ Player.prototype.movement = function(deltaTime)
 	
 	if(cellAtTileCoord(LAYER_OBJECT_TRIGGERS, tx, ty) == true)
 	{
-			this.velocity.x = 0;
-			this.jumping = false;
-			this.falling = true;
-			this.dead = true;
-			if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)
-			{
-				this.sprite.setAnimation(ANIM_DEATH_RIGHT);
-			}
+		this.kill();
 	}
 
 	
@@ -328,14 +325,20 @@ Player.prototype.movement = function(deltaTime)
 		this.position.x = 380* TILE;
 		camera.origin.x = 370*TILE
 	}
-	
-	
-	
-	
-	
-	
 }
-
+Player.prototype.kill = function()
+{
+	this.velocity.x = 0;
+	this.jumping = false;
+	this.falling = true;
+	this.dead = true;
+	this,playerState = DEAD;
+	if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)
+	{
+		this.sprite.setAnimation(ANIM_DEATH_RIGHT);
+	}
+}
+	
 
 
 

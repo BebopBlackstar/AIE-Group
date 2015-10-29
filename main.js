@@ -149,7 +149,7 @@ function initialize()
 	}
 	
 	idx = 0;
-	for(var y = 0; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++) 
+	for(var y = 1; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++) 
 	{
 		for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMIES].width; x++) 
 		{
@@ -203,8 +203,8 @@ function intersects(o1, o2)
 	if(o2.position.y + o2.height/2 < o1.position.y - o1.height/2 || o2.position.x + o2.width/2 < o1.position.x - o1.width/2 ||	o2.position.x - o2.width/2 > o1.position.x + o1.width/2 || o2.position.y - o2.height/2 > o1.position.y + o1.height/2)
 	{
 		//draws collision squares for testing
-		//context.fillRect(o2.position.x - o2.width/2 - worldOffsetX, o2.position.y - o2.height/2, o2.width, o2.height)
-		//context.fillRect(o1.position.x - o1.width/2 - worldOffsetX, o1.position.y - o1.height/2, o1.width, o1.height)
+		context.fillRect(o2.position.x - o2.width/2 - camera.worldOffsetX, o2.position.y - o2.height, o2.width, o2.height)
+		context.fillRect(o1.position.x - o1.width/2 - camera.worldOffsetX, o1.position.y - o1.height, o1.width, o1.height)
 		return false;
 	}
 	return true;
@@ -295,25 +295,30 @@ function runGame(deltaTime)
 	context.drawImage(background, -camera.origin.x%(background.width*3)/3 + background.width, 0)
 
 	context.drawImage(logo, 500 - camera.origin.x, 100)
-	if (keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) == true)
+
+	
+	
+	if(keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) != true)
 	{
-		deltaTime = 0.01;
+		if(player.dead == false)
+		{
+			camera.updateCamera(deltaTime);
+		}
+		player.update(deltaTime);
 	}
+	camera.generateMap(deltaTime);
 	
 	for (var i = 0; i < enemies.length; i++)
 	{
 		enemies[i].update(deltaTime);
+		if (intersects(player, enemies[i]))
+		{
+			player.kill();
+		}
+			
 	}
-	
-	
-	if(player.dead == false)
-	{
-		camera.updateCamera(deltaTime);
-	}
-	camera.generateMap(deltaTime);
 	
 	//drawMap(deltaTime);
-	player.update(deltaTime);
 	player.draw();
 	
 	for (var i = 0; i < enemies.length; i++)

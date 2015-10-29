@@ -1,6 +1,3 @@
-var LEFT = 0;
-var RIGHT = 1;
-
 var ANIM_ENEMY_RIGHT = 0;
 var ANIM_ENEMY_LEFT = 1;
 var ANIM_ENEMY_MAX = 2;
@@ -14,7 +11,7 @@ var Enemy = function(x, y)
 	
 	for(var i = 0; i < ANIM_ENEMY_MAX; i++)
 	{
-		this.sprite.setAnimationOffset(i, -50, -50);
+		this.sprite.setAnimationOffset(i, 0, 0);
 	}
 	
 	this.position = new Vector2();
@@ -25,11 +22,14 @@ var Enemy = function(x, y)
 	this.moveRight = true;
 	this.pause = 0;
 	
-	this.direction = RIGHT;
+	this.width = 64;
+	this.height = 64;
 }
 
 Enemy.prototype.update = function(deltaTime)
 {
+	var ddx = 0;			//acceleration
+
 	this.sprite.update(deltaTime);
 		
 	if(this.pause > 0)
@@ -39,29 +39,27 @@ Enemy.prototype.update = function(deltaTime)
 	
 	else
 	{
-		var ddx = 0;			//acceleration
 	
 		//collision detection
 		var tx = pixelToTile(this.position.x);
 		var ty = pixelToTile(this.position.y);
 		var nx = (this.position.x) % TILE;		//true if enemy overlaps right
 		var ny = (this.position.y) % TILE;		//true if enemy overlaps below
-		var cell = cellAtTileCoord(LAYER_PLATFORMS, tx , ty + 1);
-		var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 2, ty + 1);
-		var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 2);
-		var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 2, ty + 2);
+		var cell = cellAtTileCoord(LAYER_PLATFORMS, tx , ty);
+		var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
+		var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);
+		var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty + 1);
 		
 		
 		
 		if(this.moveRight)
 		{
-			this.sprite.setAnimation(ANIM_ENEMY_RIGHT);
+			if (this.sprite.currentAnimation != ANIM_ENEMY_RIGHT)
+				this.sprite.setAnimation(ANIM_ENEMY_RIGHT);		
 			
 			if(celldiag && !cellright)
 			{
-				this.sprite.setAnimation(ANIM_ENEMY_RIGHT);
-				ddx = ddx + ENEMY_ACCEL;	//enemy wants to go right
-				
+				ddx = ddx + ENEMY_ACCEL;	//enemy wants to go right				
 			}
 			
 			
@@ -69,15 +67,15 @@ Enemy.prototype.update = function(deltaTime)
 			{
 				this.velocityX = 0;
 				this.moveRight = false;
-				this.pause = 0.5;
+				this.pause = 2.5;
 			}
 		}
 		
 		else
 		{
-			this.sprite.setAnimation(ANIM_ENEMY_LEFT);
+			if (this.sprite.currentAnimation != ANIM_ENEMY_LEFT)
+				this.sprite.setAnimation(ANIM_ENEMY_LEFT);
 			
-			this.direction = LEFT;
 			if(celldown && !cell)
 			{
 				ddx = ddx - ENEMY_ACCEL;	//enemy wants to go left
@@ -88,9 +86,10 @@ Enemy.prototype.update = function(deltaTime)
 			{
 				this.velocityX = 0;
 				this.moveRight = true;
-				this.pause = 0.5;
+				this.pause = 2.5;
 			}
 		}
+		
 		
 		this.position.x = Math.floor(this.position.x + (deltaTime * this.velocityX));
 		this.velocityX = bound(this.velocityX + (deltaTime * ddx), -ENEMY_MAXDX, ENEMY_MAXDX);
@@ -101,5 +100,9 @@ Enemy.prototype.update = function(deltaTime)
 
 Enemy.prototype.draw = function(deltaTime)
 {
-	this.sprite.draw(context, this.position.x - camera.worldOffsetX, this.position.y);
+	context.fillStyle = "yellow";
+	this.sprite.draw(context, this.position.x - camera.worldOffsetX - this.width/2, this.position.y - this.height);
+	//context.fillRect(this.position.x - camera.worldOffsetX, this.position.y, this.width, this.height);
+	//context.fillRect(this.position.x - this.width/2 - camera.worldOffsetX, this.position.y - this.height, this.width, this.height);
+
 }
