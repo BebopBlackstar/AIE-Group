@@ -105,6 +105,9 @@ var camera = new Camera();
 var logo = document.createElement("img");
 logo.src ="templogo.png";
 
+var splashBG = document.createElement("img");
+splashBG.src = "Title Splash BG.png";
+
 var tileset = document.createElement("img");
 tileset.src = "tileset.png";
 
@@ -277,15 +280,20 @@ function runSplash(deltaTime)
 {
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
 	{
-		gameState = STATE_GAME;
+	resetGame();
+	gameState = STATE_GAME;
 	}
-
-	context.font="20px Georgia";
-	context.fillStyle= '#000000';
-	context.fillText("Splash Screen   ", 10, 20);
-	context.fillText("Press space to play   ", 10, 50);
-	
-	
+	context.drawImage(splashBG, 0, 0);
+	context.font="20px Arial Black";
+	context.fillStyle= '#FFD700';
+	var message = "Press START"
+	var textMeasure = context.measureText(message);
+	context.fillText(message, SCREEN_WIDTH/2 - (textMeasure.width/2), 440);	
+	player.speed = 0;
+	player.sprite.setAnimation(ANIM_IDLE_RIGHT);
+	player.position.x = SCREEN_WIDTH/2;
+	player.position.y = SCREEN_HEIGHT/4;
+	player.draw();
 
 }
 
