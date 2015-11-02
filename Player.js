@@ -2,8 +2,9 @@ var ANIM_WALK_RIGHT = 0;
 var ANIM_IDLE_RIGHT = 1;
 var ANIM_DEATH_RIGHT = 2;
 var ANIM_JUMP_RIGHT = 3;
+var ANIM_IDLE_LARGE = 4;
 
-var ANIM_MAX = 4;
+var ANIM_MAX = 5;
 
 var RUN = 1;
 var DEAD = 2;
@@ -18,10 +19,11 @@ var Player = function()
 {
 	this.sprite = new Sprite("skeleton.png");
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-	this.sprite.buildAnimation(2, 4, 90, 96, 0.25,[4, 5, 6, 7]);
+	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[11, 12, 13, 14]);
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.25,[15, 16, 17, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19]);
 
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1, [0]);
+	this.sprite.buildAnimation(2, 4, 90, 96, 0.25,[4, 5, 6, 7]);
 	
 	for(var i=0; i<ANIM_MAX; i++)
 	{

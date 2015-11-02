@@ -108,6 +108,9 @@ logo.src ="templogo.png";
 var splashBG = document.createElement("img");
 splashBG.src = "Title Splash BG.png";
 
+var gameOverSplashBG = document.createElement("img");
+gameOverSplashBG.src = "GameOver Splash BG.png";
+
 var tileset = document.createElement("img");
 tileset.src = "tileset.png";
 
@@ -287,14 +290,14 @@ function runSplash(deltaTime)
 	context.drawImage(splashBG, 0, 0);
 	context.font="20px Arial Black";
 	context.fillStyle= '#FFD700';
-	var message = "Press START"
+	var message = "Press SPACE"
 	var textMeasure = context.measureText(message);
 	context.fillText(message, SCREEN_WIDTH/2 - (textMeasure.width/2), 440);	
 	player.speed = 0;
 	
-	if (player.sprite.currentAnimation != ANIM_IDLE_RIGHT)
+	if (player.sprite.currentAnimation != ANIM_IDLE_LARGE)
 	{
-		player.sprite.setAnimation(ANIM_IDLE_RIGHT);
+		player.sprite.setAnimation(ANIM_IDLE_LARGE);
 	};
 	player.position.x = SCREEN_WIDTH/2 - 40;
 	player.position.y = SCREEN_HEIGHT/4;
@@ -370,8 +373,19 @@ function runGame(deltaTime)
 	
 }
 
-
-
+function runGameOver()
+{
+	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
+	{
+		resetGame();
+		gameState = STATE_SPLASH;
+	}
+	context.drawImage(gameOverSplashBG, 0, 0);
+	context.fillStyle = "white";
+	context.font="32px Yu Gothic";
+	var scoreText = "Score: " + player.score;
+	context.fillText(scoreText, 400, 50);
+}
 
 function run()
 {
@@ -389,6 +403,10 @@ function run()
 			
 		case STATE_GAME:	
 		runGame(deltaTime);
+		break;
+		
+		case STATE_GAMEOVER:
+		runGameOver(deltaTime);
 		break;
 	}
 }
