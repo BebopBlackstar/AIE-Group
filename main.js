@@ -242,8 +242,9 @@ function intersects(o1, o2)
 	if(o2.position.y + o2.height/2 < o1.position.y - o1.height/2 || o2.position.x + o2.width/2 < o1.position.x - o1.width/2 ||	o2.position.x - o2.width/2 > o1.position.x + o1.width/2 || o2.position.y - o2.height/2 > o1.position.y + o1.height/2)
 	{
 		//draws collision squares for testing
-		context.fillRect(o2.position.x - o2.width/2 - camera.worldOffsetX, o2.position.y - o2.height, o2.width, o2.height)
-		context.fillRect(o1.position.x - o1.width/2 - camera.worldOffsetX, o1.position.y - o1.height, o1.width, o1.height)
+		//context.fillRect(o2.position.x - o2.width/2 - camera.worldOffsetX, o2.position.y - o2.height, o2.width, o2.height)
+		
+		//context.fillRect(o1.position.x - o1.width/2 - camera.worldOffsetX, o1.position.y - o1.height, o1.width, o1.height)
 		return false;
 	}
 	return true;
@@ -294,7 +295,7 @@ function resetGame()
 {
 	//highScore = player.score;
 	player = new Player();
-	camera = new Camera();
+	camera = new Camera(); 
 	enemies.splice(0, enemies.length);
 	initialize();
 }
@@ -326,9 +327,14 @@ function runSplash(deltaTime)
 	var textMeasure = context.measureText(message);
 	context.fillText(message, SCREEN_WIDTH/2 - (textMeasure.width/2), 440);	
 	player.speed = 0;
-	player.sprite.setAnimation(ANIM_IDLE_RIGHT);
-	player.position.x = SCREEN_WIDTH/2;
+	
+	if (player.sprite.currentAnimation != ANIM_IDLE_RIGHT)
+	{
+		player.sprite.setAnimation(ANIM_IDLE_RIGHT);
+	};
+	player.position.x = SCREEN_WIDTH/2 - 40;
 	player.position.y = SCREEN_HEIGHT/4;
+	player.sprite.update(deltaTime);
 	player.draw();
 
 }
@@ -344,10 +350,6 @@ function runGame(deltaTime)
 	
 	if(keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) != true)
 	{
-		if(player.dead == false)
-		{
-			camera.updateCamera(deltaTime);
-		}
 		player.update(deltaTime);
 	}
 	camera.generateMap(deltaTime);
