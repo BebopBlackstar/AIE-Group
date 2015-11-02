@@ -502,9 +502,12 @@ function runGameOver()
 	context.font="48px Arial Black";
 	var bestText = "Best run: " + highScore;
 	var textMeasureBest = context.measureText(bestText);
-	context.fillText(bestText, SCREEN_WIDTH/2 - (textMeasureBest.width/2), SCREEN_HEIGHT - 30);
+	context.fillText(bestText, SCREEN_WIDTH/2 - (textMeasureBest.width/2), SCREEN_HEIGHT - 40);
 
-	
+	context.fillStyle = "#FFE4C4";
+	context.font="16px Arial Black";
+	var text = "Press SPACE to retry...";
+	context.fillText(text, SCREEN_WIDTH/2 + 100, SCREEN_HEIGHT - 5);
 
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
 	{
