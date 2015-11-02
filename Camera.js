@@ -11,7 +11,7 @@ var Camera = function()
 	this.speed = 3;
 }
 
-Camera.prototype.updateCamera = function(deltaTime)
+Camera.prototype.updateCamera = function(deltaTime, passedSpeed)
 {
 	if (this.origin.x <= MAP.tw*TILE-this.width)
 	{
@@ -30,7 +30,7 @@ Camera.prototype.updateCamera = function(deltaTime)
 		{
 			this.speed = 4 * deltaTime * 60;	
 		}
-	this.origin.x += this.speed;
+	this.origin.x += this.speed * passedSpeed;
 	}
 	
 }

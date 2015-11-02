@@ -207,6 +207,7 @@ function intersects(o1, o2)
 	{
 		//draws collision squares for testing
 		//context.fillRect(o2.position.x - o2.width/2 - camera.worldOffsetX, o2.position.y - o2.height, o2.width, o2.height)
+		
 		//context.fillRect(o1.position.x - o1.width/2 - camera.worldOffsetX, o1.position.y - o1.height, o1.width, o1.height)
 		return false;
 	}
@@ -313,10 +314,6 @@ function runGame(deltaTime)
 	
 	if(keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) != true)
 	{
-		if(player.dead == false)
-		{
-			camera.updateCamera(deltaTime);
-		}
 		player.update(deltaTime);
 	}
 	camera.generateMap(deltaTime);

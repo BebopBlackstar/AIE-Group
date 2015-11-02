@@ -25,7 +25,7 @@ var Player = function()
 	
 	for(var i=0; i<ANIM_MAX; i++)
 	{
-		this.sprite.setAnimationOffset(i, 0, 0);
+		this.sprite.setAnimationOffset(i, 0, 5);
 	}	
 	
 	
@@ -68,15 +68,14 @@ Player.prototype.update = function(deltaTime)
 				gameState = STATE_SPLASH;
 				resetGame();
 			}
-			if (0 > this.timer)
-			{
-				if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)
-				this.sprite.setAnimation(ANIM_DEATH_RIGHT);
-				
-				this.speed = 0;
-				this.movement(deltaTime, 0, MAXDY);
-				this.sprite.update(deltaTime);
-			}
+		
+			if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)
+			this.sprite.setAnimation(ANIM_DEATH_RIGHT);
+			
+			this.speed = 0;
+			this.movement(deltaTime, 0, MAXDY);
+			this.sprite.update(deltaTime);
+			
 			
 
 		break;
@@ -85,6 +84,8 @@ Player.prototype.update = function(deltaTime)
 			this.speed = 1;
 			this.right = true;
 			this.sprite.update(deltaTime);
+			camera.updateCamera(deltaTime, 1);
+
 			
 			this.animations(deltaTime);
 			this.movement(deltaTime, MAXDX, MAXDY);
@@ -94,9 +95,23 @@ Player.prototype.update = function(deltaTime)
 			this.speed = 1;
 			this.right = true;
 			this.sprite.update(deltaTime);
+			camera.updateCamera(deltaTime, 1);
+
 			
 			this.animations(deltaTime);
 			this.movement(deltaTime, MAXDX * 2, MAXDY);
+		break;
+		
+		case SPEED_SLOW:
+			this.speed = 0.5;
+			this.right = true;
+			this.sprite.update(deltaTime);
+			camera.updateCamera(deltaTime, 0.5);
+
+			
+			this.animations(deltaTime);
+			this.movement(deltaTime, MAXDX, MAXDY);
+			
 			
 	}
 }
@@ -130,9 +145,9 @@ Player.prototype.animations = function(deltaTime)
 	this.right = true
 	// sets animation back to walk if nothing special is happening. ie: player just jumped and no buttons pressed.
 	
-	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true && !this.falling && !this.dead)
+	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true && !this.falling)
 	{
-		this.speed *= 1.25;
+		this.speed += 0.25;
 	}
 
 	else if (keyboard.isKeyDown(keyboard.KEY_LEFT) == true )
@@ -320,13 +335,20 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	}
 	
 	// hack to shortcut to end of level
-	if (keyboard.isKeyDown(keyboard.KEY_9) == true)
+	if (keyboard.isKeyDown(keyboard.KEY_6) == true)
 	{
-		this.position.x = 905*TILE
-		camera.origin.x = 900*TILE
+		this.playerState = RUN;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_7) == true)
+	{
+		this.playerState = SPEED_BOOST;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_8) == true)
+	{
+		this.playerState = SPEED_SLOW;
 	}
 	
-	if (keyboard.isKeyDown(keyboard.KEY_8) == true)
+	if (keyboard.isKeyDown(keyboard.KEY_9) == true)
 	{
 		this.kill();
 
@@ -336,12 +358,12 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 Player.prototype.kill = function()
 {
 	if (this.timer < 0)
-		this.timer = 1;
+		this.timer = 2;
 	this.velocity.x = 0;
 	this.jumping = false;
 	this.falling = true;
 	this.dead = true;
-	this,playerState = DEAD;
+	this.playerState = DEAD;
 	if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)
 	{
 		this.sprite.setAnimation(ANIM_DEATH_RIGHT);
