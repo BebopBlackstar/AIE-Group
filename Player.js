@@ -148,6 +148,7 @@ Player.prototype.animations = function(deltaTime)
 	}
 	if (!this.dead)
 	this.right = true
+
 	// sets animation back to walk if nothing special is happening. ie: player just jumped and no buttons pressed.
 	
 	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true && !this.falling)
@@ -245,6 +246,13 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
 	var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);
 	var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty + 1);
+	
+	if (this.velocity.x > 0)
+	{
+		musicBackground.play();
+	}
+	
+	
 	
 	// If the player has vertical velocity, then check to see if they have hit a platform
 	// below or above, in which case, stop their vertical velocity, and clamp their
@@ -370,7 +378,7 @@ Player.prototype.kill = function()
 {
 	if (this.timer < 0)
 		this.timer = 2;
-	//sfxDeath.play();
+	sfxDeath.play();
 	this.velocity.x = 0;
 	this.jumping = false;
 	this.falling = true;

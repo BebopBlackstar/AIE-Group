@@ -86,6 +86,8 @@ var gameState = STATE_SPLASH;
 var musicBackground;
 var sfxJump;
 var sfxDeath;
+var sfxPowerup;
+var sfxRun;
 
 
 
@@ -219,16 +221,16 @@ function initialize()
 	}
 	
 	// background music
-	//musicBackground = new Howl
+	musicBackground = new Howl
 	(
 		{
-			urls: ["background.ogg"],
-			loop: true,
+			urls: ["run.wav"],
+			loop: false,
 			buffer: true,
 			volume: 0.5
 		} 
 	);
-	//musicBackground.play();
+	
 	
 	sfxJump = new Howl(
 	{
@@ -251,6 +253,18 @@ function initialize()
 			isSfxPlaying = false;
 		}
 	});
+	
+	sfxPowerup = new Howl(
+	{
+		urls: ["powerup.wav"],
+		buffer: true,
+		volume: 1,
+		onend: function()
+		{
+			isSfxPlaying = false;
+		}
+	});
+
 	
 
 }
@@ -315,6 +329,7 @@ function resetGame()
 	player = new Player();
 	camera = new Camera(); 
 	enemies.splice(0, enemies.length);
+	musicBackground.stop();
 	initialize();
 }
 
@@ -334,6 +349,13 @@ function drawMap(deltaTime)
 function runSplash(deltaTime)
 {
 	
+
+	musicBackground.stop();
+	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
+	{
+	resetGame();
+	gameState = STATE_GAME;
+	}
 
 	context.drawImage(splashBG, 0, 0);
 	context.font="20px Arial Black";
@@ -362,12 +384,11 @@ function runSplash(deltaTime)
 
 function runGame(deltaTime)
 {
+	musicBackground.stop();
 	context.drawImage(background, -camera.origin.x%(background.width*3)/3, 0)
 	context.drawImage(background, -camera.origin.x%(background.width*3)/3 + background.width, 0)
 
 	context.drawImage(logo, 500 - camera.origin.x, 100)
-
-	
 	
 	if(keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) != true)
 	{
