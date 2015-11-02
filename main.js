@@ -46,10 +46,11 @@ var TILESET_COUNT_X = 16;
 var TILESET_COUNT_Y = 22;
 
 // layer variables
-var LAYER_BACKGOUND = 0;
-var LAYER_BACKGOUND2 = 1;
+var LAYER_BACKGROUND = 0;
+var LAYER_BACKGROUND2 = 1;
 var LAYER_PLATFORMS = 2;
 var LAYER_OBJECT_ENEMIES = 3;
+//var LAYER_OBJECT_ENEMIES2 = 4;
 var LAYER_OBJECT_POWERUPS = 4;
 var LAYER_OBJECT_TRIGGERS = 5;
 
@@ -97,7 +98,8 @@ var fpsTime = 0;
 var highScore = 0;
 var player = new Player();
 var keyboard = new Keyboard();
-var enemies = []
+var enemies = [];
+var enemies2 = [];
 var camera = new Camera();
 
 // loading of images
@@ -132,12 +134,8 @@ function initialize()
 			for(var x = 0; x < level1.layers[layerIdx].width; x++) 
 			{
 				if(level1.layers[layerIdx].data[idx] != 0) 
-				{
-					// for each tile we find in the layer data, we need to create 4 collisions
-					// (because our collision squares are 35x35 but the tile in the
-					// level are 70x70)
-					
-						// MADE ADJUSTMENT HERE due to there no longer needing 4 squares of collision. AP
+				{				
+					// MADE ADJUSTMENT HERE due to there no longer needing 4 squares of collision. AP
 					cells[layerIdx][y][x] = 1;
 				}
 				else if(cells[layerIdx][y][x] != 1) 
@@ -165,6 +163,21 @@ function initialize()
 			idx++;
 		}
 	} 
+	
+	/*idx = 0;
+	for(var y = 1; y < level1.layers[LAYER_OBJECT_ENEMIES2].height; y++)
+	{
+		for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMIES2].width; x++)
+		{
+			if(level1.layers[LAYER_OBJECT_ENEMIES2].data[idx] != 0)
+			{
+				var px = tileToPixel(x);
+				var py = tileToPixel(y);
+				enemies2.push(new Enemy2(px, py));
+			}
+			idx++;
+		}
+	}*/
 	
 	cells[LAYER_OBJECT_TRIGGERS] = [];
 	idx = 0;
@@ -326,7 +339,6 @@ function runGame(deltaTime)
 			
 	}
 	
-	//drawMap(deltaTime);
 	player.draw();
 	
 	for (var i = 0; i < enemies.length; i++)
