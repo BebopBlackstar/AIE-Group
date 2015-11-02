@@ -15,8 +15,14 @@ Camera.prototype.updateCamera = function(deltaTime)
 {
 	if (this.origin.x <= MAP.tw*TILE-this.width)
 	{
+		this.speed = 4 * deltaTime * 60;
 		// speeds up camera if player is moving to the right at the edge of screen
-		if (player.position.x - this.origin.x > 600)
+		if (player.position.x - this.origin.x > 640)
+		{
+			// this is for when speed boost is on and the player is moving off to the right of screen. Makes the camera keep up with the player
+			this.origin.x = player.position.x - 640;
+		}
+		else if (player.position.x - this.origin.x > 600)
 		{
 			this.speed = 6 * deltaTime * 60;
 		}

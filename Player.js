@@ -25,20 +25,18 @@ var Player = function()
 	
 	for(var i=0; i<ANIM_MAX; i++)
 	{
-		this.sprite.setAnimationOffset(i, 5, 5);
+		this.sprite.setAnimationOffset(i, 0, 0);
 	}	
 	
 	
 	this.width = 36;
 	this.height = 48;
 	
-	this.position = new Vector2(10, 400);
+	this.position = new Vector2(10, 350);
 	this.position.set(100, 400);
 	
-	this.shootTimer = 0;
-	
-	this.velocity = new Vector2(0, 0);
-		
+	this.velocity = new Vector2(0, 5);
+
 	this.falling = true;
 	this.jumping = false;
 	this.dead = false;
@@ -52,23 +50,34 @@ var Player = function()
 	
 	//TODO score system
 	this.score = 0;
-	this.playerState = RUN
+	this.playerState = RUN;
 	this.dead = false;
+	
+	this.timer = 0;
 	};
 	
 	
 Player.prototype.update = function(deltaTime)
 {
+	this.timer -= deltaTime;
 	switch(this.playerState)
 	{
 		case DEAD:
+			if (this.timer <= 0)
+			{
+				gameState = STATE_SPLASH;
+				resetGame();
+			}
+			if (0 > this.timer)
+			{
+				if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)
+				this.sprite.setAnimation(ANIM_DEATH_RIGHT);
+				
+				this.speed = 0;
+				this.movement(deltaTime, 0, MAXDY);
+				this.sprite.update(deltaTime);
+			}
 			
-			if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)
-			this.sprite.setAnimation(ANIM_DEATH_RIGHT);
-		
-			this.movement(deltaTime);
-			this.sprite.update(deltaTime);
-
 
 		break;
 		
@@ -78,7 +87,7 @@ Player.prototype.update = function(deltaTime)
 			this.sprite.update(deltaTime);
 			
 			this.animations(deltaTime);
-			this.movement(deltaTime);
+			this.movement(deltaTime, MAXDX, MAXDY);
 		break;
 		
 		case SPEED_BOOST:
@@ -87,7 +96,7 @@ Player.prototype.update = function(deltaTime)
 			this.sprite.update(deltaTime);
 			
 			this.animations(deltaTime);
-			this.movement(deltaTime);
+			this.movement(deltaTime, MAXDX * 2, MAXDY);
 			
 	}
 }
@@ -135,7 +144,7 @@ Player.prototype.animations = function(deltaTime)
 		}
 	}
 	
-	else if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping)
+	else if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping && !this.dead)
 	{
 		this.sprite.setAnimation(ANIM_WALK_RIGHT);
 	}
@@ -148,7 +157,7 @@ Player.prototype.animations = function(deltaTime)
 
 
 
-Player.prototype.movement = function(deltaTime)
+Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 {
 	
 	//right = true;
@@ -268,7 +277,7 @@ Player.prototype.movement = function(deltaTime)
 	}
 	
 	
-	if(cellAtTileCoord(LAYER_OBJECT_TRIGGERS, tx, ty) == true)
+	if(cellAtTileCoord(LAYER_OBJECT_TRIGGERS, tx, ty) == true && !this.dead)
 	{
 		this.kill();
 	}
@@ -278,7 +287,7 @@ Player.prototype.movement = function(deltaTime)
 	// Hacks and "Checkpoints"
 	if (keyboard.isKeyDown(keyboard.KEY_0) == true)
 	{
-		this.position.y = -50;
+		this.position.y = -200;
 	}
 	if (keyboard.isKeyDown(keyboard.KEY_1) == true)
 	{
@@ -303,7 +312,12 @@ Player.prototype.movement = function(deltaTime)
 		this.position.x = 8600;
 		camera.origin.x = 8600 - 500;
 	}
-	
+	if (keyboard.isKeyDown(keyboard.KEY_5) == true)
+	{
+		this.position.y = 432;
+		this.position.x = 11186;
+		camera.origin.x = this.position.x - 500;
+	}
 	
 	// hack to shortcut to end of level
 	if (keyboard.isKeyDown(keyboard.KEY_9) == true)
@@ -314,20 +328,15 @@ Player.prototype.movement = function(deltaTime)
 	
 	if (keyboard.isKeyDown(keyboard.KEY_8) == true)
 	{
-		this.position.y = -50;
-		this.position.x = 380* TILE;
-		camera.origin.x = 370*TILE
+		this.kill();
 
 	}
-	if (keyboard.isKeyDown(keyboard.KEY_8) == true)
-	{
-		this.position.y = -50;
-		this.position.x = 380* TILE;
-		camera.origin.x = 370*TILE
-	}
+	
 }
 Player.prototype.kill = function()
 {
+	if (this.timer < 0)
+		this.timer = 1;
 	this.velocity.x = 0;
 	this.jumping = false;
 	this.falling = true;
