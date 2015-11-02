@@ -2,8 +2,9 @@ var ANIM_WALK_RIGHT = 0;
 var ANIM_IDLE_RIGHT = 1;
 var ANIM_DEATH_RIGHT = 2;
 var ANIM_JUMP_RIGHT = 3;
+var ANIM_IDLE_LARGE = 4;
 
-var ANIM_MAX = 4;
+var ANIM_MAX = 5;
 
 var RUN = 1;
 var DEAD = 2;
@@ -18,10 +19,11 @@ var Player = function()
 {
 	this.sprite = new Sprite("skeleton.png");
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-	this.sprite.buildAnimation(2, 4, 90, 96, 0.25,[4, 5, 6, 7]);
+	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[11, 12, 13, 14]);
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.25,[15, 16, 17, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19]);
 
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1, [0]);
+	this.sprite.buildAnimation(2, 4, 90, 96, 0.25,[4, 5, 6, 7]);
 	
 	for(var i=0; i<ANIM_MAX; i++)
 	{
@@ -66,10 +68,10 @@ Player.prototype.update = function(deltaTime)
 	switch(this.playerState)
 	{
 		case DEAD:
+		
 			if (this.timer <= 0)
 			{
-				gameState = STATE_SPLASH;
-				resetGame();
+				gameState = STATE_GAMEOVER;
 			}
 		
 			if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)
@@ -197,6 +199,9 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	ddx = ddx - FRICTION; // player was going right, but not any more
 	if (this.jump && !this.jumping && !falling)
 	{
+		
+		sfxJump.play()
+		
 		// apply an instantaneous (large) vertical impulse
 		ddy = ddy - JUMP;
 		this.jumping = true;
@@ -365,6 +370,7 @@ Player.prototype.kill = function()
 {
 	if (this.timer < 0)
 		this.timer = 2;
+	//sfxDeath.play();
 	this.velocity.x = 0;
 	this.jumping = false;
 	this.falling = true;

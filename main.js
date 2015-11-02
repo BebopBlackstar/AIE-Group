@@ -46,12 +46,13 @@ var TILESET_COUNT_X = 16;
 var TILESET_COUNT_Y = 22;
 
 // layer variables
-var LAYER_BACKGOUND = 0;
-var LAYER_BACKGOUND2 = 1;
+var LAYER_BACKGROUND = 0;
+var LAYER_BACKGROUND2 = 1;
 var LAYER_PLATFORMS = 2;
 var LAYER_OBJECT_ENEMIES = 3;
 var LAYER_OBJECT_TRIGGERS = 4;
 var LAYER_OBJECT_SPEEDBOOSTS = 5;
+
 
 var worldOffsetX = 10;
 
@@ -78,12 +79,13 @@ var ENEMY_ACCEL = ENEMY_MAXDX * 2;
 // Gamestate variables
 var STATE_SPLASH = 0;
 var STATE_GAME = 1;
-
+var STATE_GAMEOVER = 2;
 
 var gameState = STATE_SPLASH;
 
 var musicBackground;
-var sfxFire;
+var sfxJump;
+var sfxDeath;
 
 
 
@@ -99,6 +101,7 @@ var player = new Player();
 var keyboard = new Keyboard();
 var enemies = [];
 var powerups = [];
+var enemies2 = [];
 var camera = new Camera();
 
 // loading of images
@@ -108,6 +111,9 @@ logo.src ="templogo.png";
 
 var splashBG = document.createElement("img");
 splashBG.src = "Title Splash BG.png";
+
+var gameOverSplashBG = document.createElement("img");
+gameOverSplashBG.src = "GameOver Splash BG.png";
 
 var tileset = document.createElement("img");
 tileset.src = "tileset.png";
@@ -133,12 +139,8 @@ function initialize()
 			for(var x = 0; x < level1.layers[layerIdx].width; x++) 
 			{
 				if(level1.layers[layerIdx].data[idx] != 0) 
-				{
-					// for each tile we find in the layer data, we need to create 4 collisions
-					// (because our collision squares are 35x35 but the tile in the
-					// level are 70x70)
-					
-						// MADE ADJUSTMENT HERE due to there no longer needing 4 squares of collision. AP
+				{				
+					// MADE ADJUSTMENT HERE due to there no longer needing 4 squares of collision. AP
 					cells[layerIdx][y][x] = 1;
 				}
 				else if(cells[layerIdx][y][x] != 1) 
@@ -181,6 +183,20 @@ function initialize()
 			idx++;
 		}
 	} 
+	/*idx = 0;
+	for(var y = 1; y < level1.layers[LAYER_OBJECT_ENEMIES2].height; y++)
+	{
+		for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMIES2].width; x++)
+		{
+			if(level1.layers[LAYER_OBJECT_ENEMIES2].data[idx] != 0)
+			{
+				var px = tileToPixel(x);
+				var py = tileToPixel(y);
+				enemies2.push(new Enemy2(px, py));
+			}
+			idx++;
+		}
+	}*/
 	
 	cells[LAYER_OBJECT_TRIGGERS] = [];
 	idx = 0;
@@ -213,6 +229,28 @@ function initialize()
 		} 
 	);
 	//musicBackground.play();
+	
+	sfxJump = new Howl(
+	{
+		urls: ["jump.wav"],
+		buffer: true,
+		volume: 1,
+		onend: function() 
+		{
+			isSfxPlaying = false;
+		}
+	});
+	
+	sfxDeath = new Howl(
+	{
+		urls: ["death.wav"],
+		buffer: true,
+		volume: 1,
+		onend: function()
+		{
+			isSfxPlaying = false;
+		}
+	});
 	
 
 }
@@ -296,26 +334,29 @@ function drawMap(deltaTime)
 function runSplash(deltaTime)
 {
 	
+
 	context.drawImage(splashBG, 0, 0);
 	context.font="20px Arial Black";
 	context.fillStyle= '#FFD700';
-	var message = "Press START"
+	var message = "Press SPACE"
 	var textMeasure = context.measureText(message);
 	context.fillText(message, SCREEN_WIDTH/2 - (textMeasure.width/2), 440);	
 	player.speed = 0;
 	
-	if (player.sprite.currentAnimation != ANIM_IDLE_RIGHT)
+	if (player.sprite.currentAnimation != ANIM_IDLE_LARGE)
 	{
-		player.sprite.setAnimation(ANIM_IDLE_RIGHT);
+		player.sprite.setAnimation(ANIM_IDLE_LARGE);
 	};
 	player.position.x = SCREEN_WIDTH/2 - 40;
 	player.position.y = SCREEN_HEIGHT/4;
 	player.sprite.update(deltaTime);
 	player.draw();
+
+	
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
 	{
-		resetGame();
-		gameState = STATE_GAME;
+	resetGame();
+	gameState = STATE_GAME;
 	}
 }
 
@@ -386,8 +427,7 @@ function runGame(deltaTime)
 	
 	if (camera.origin.x - player.position.x > 0)
 	{
-		resetGame();
-		gameState = STATE_SPLASH;
+		gameState = STATE_GAMEOVER;
 	}
 	
 	fireEmitter.update(deltaTime, player.position.x - player.width/2, player.position.y - player.height);
@@ -415,10 +455,41 @@ function runGame(deltaTime)
 	var scoreText = "Score: " + player.score;
 	context.fillText(scoreText, 400, 50);
 	
+	if (highScore <= player.score)
+	{
+		highScore = player.score;
+	}
 }
 
+function runGameOver()
+{	
+	context.drawImage(gameOverSplashBG, 0, 0);
+	context.fillStyle = "#FFE4C4";
+	context.font="36px Arial Black";
+	var yourScore = "Your score:";
+	var yourScoreMeasure = context.measureText(yourScore);
+	context.fillText(yourScore, SCREEN_WIDTH/2 - (yourScoreMeasure.width/2), SCREEN_HEIGHT/2 + 10);
 
+	context.fillStyle = "white";
+	context.font="128px Arial Black";
+	var scoreText = "Score: " + player.score;
+	var textMeasure = context.measureText(player.score);
+	context.fillText(player.score, SCREEN_WIDTH/2 - (textMeasure.width/2), SCREEN_HEIGHT/2 + 140);
+	var bestScore = player.score;
+	context.fillStyle = "#FFD700";
+	context.font="48px Arial Black";
+	var bestText = "Best run: " + highScore;
+	var textMeasureBest = context.measureText(bestText);
+	context.fillText(bestText, SCREEN_WIDTH/2 - (textMeasureBest.width/2), SCREEN_HEIGHT - 30);
 
+	
+
+	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
+	{
+		resetGame();
+		gameState = STATE_SPLASH;
+	}
+}
 
 function run()
 {
@@ -436,6 +507,10 @@ function run()
 			
 		case STATE_GAME:	
 		runGame(deltaTime);
+		break;
+		
+		case STATE_GAMEOVER:
+		runGameOver(deltaTime);
 		break;
 	}
 }
