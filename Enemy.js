@@ -67,7 +67,7 @@ Enemy.prototype.update = function(deltaTime)
 			{
 				this.velocityX = 0;
 				this.moveRight = false;
-				this.pause = 2.5;
+				this.pause = 1;
 			}
 		}
 		
@@ -86,7 +86,7 @@ Enemy.prototype.update = function(deltaTime)
 			{
 				this.velocityX = 0;
 				this.moveRight = true;
-				this.pause = 2.5;
+				this.pause = 1;
 			}
 		}
 		

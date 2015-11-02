@@ -333,6 +333,7 @@ function drawMap(deltaTime)
 // menu/splash function. runs every frame.
 function runSplash(deltaTime)
 {
+	musicBackground.stop();
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
 	{
 	resetGame();
@@ -359,6 +360,7 @@ function runSplash(deltaTime)
 
 function runGame(deltaTime)
 {
+	musicBackground.stop();
 	context.drawImage(background, -camera.origin.x%(background.width*3)/3, 0)
 	context.drawImage(background, -camera.origin.x%(background.width*3)/3 + background.width, 0)
 
