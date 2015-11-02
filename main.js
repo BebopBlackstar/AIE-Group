@@ -84,7 +84,7 @@ var STATE_GAME = 1;
 var gameState = STATE_SPLASH;
 
 var musicBackground;
-var sfxFire;
+var sfxJump;
 
 
 
@@ -210,6 +210,17 @@ function initialize()
 		} 
 	);
 	//musicBackground.play();
+	
+	sfxJump = new Howl(
+	{
+		urls: ["jump.wav"],
+		buffer: true,
+		volume: 1,
+		onend: function() 
+		{
+			isSfxPlaying = false;
+		}
+	});
 	
 
 }

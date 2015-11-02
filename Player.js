@@ -179,6 +179,9 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	ddx = ddx - FRICTION; // player was going right, but not any more
 	if (this.jump && !this.jumping && !falling)
 	{
+		
+		sfxJump.play()
+		
 		// apply an instantaneous (large) vertical impulse
 		ddy = ddy - JUMP;
 		this.jumping = true;
