@@ -68,8 +68,7 @@ Player.prototype.update = function(deltaTime)
 		
 			if (this.timer <= 0)
 			{
-				gameState = STATE_SPLASH;
-				resetGame();
+				gameState = STATE_GAMEOVER;
 			}
 		
 			if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)

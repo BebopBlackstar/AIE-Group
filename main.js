@@ -79,7 +79,7 @@ var ENEMY_ACCEL = ENEMY_MAXDX * 2;
 // Gamestate variables
 var STATE_SPLASH = 0;
 var STATE_GAME = 1;
-
+var STATE_GAMEOVER = 2;
 
 var gameState = STATE_SPLASH;
 
@@ -333,12 +333,14 @@ function drawMap(deltaTime)
 // menu/splash function. runs every frame.
 function runSplash(deltaTime)
 {
+
 	musicBackground.stop();
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
 	{
 	resetGame();
 	gameState = STATE_GAME;
 	}
+
 	context.drawImage(splashBG, 0, 0);
 	context.font="20px Arial Black";
 	context.fillStyle= '#FFD700';
@@ -355,7 +357,12 @@ function runSplash(deltaTime)
 	player.position.y = SCREEN_HEIGHT/4;
 	player.sprite.update(deltaTime);
 	player.draw();
-
+	
+	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
+	{
+	resetGame();
+	gameState = STATE_GAME;
+	}
 }
 
 function runGame(deltaTime)
@@ -392,8 +399,7 @@ function runGame(deltaTime)
 	
 	if (camera.origin.x - player.position.x > 0)
 	{
-		resetGame();
-		gameState = STATE_SPLASH;
+		gameState = STATE_GAMEOVER;
 	}
 	
 	fireEmitter.update(deltaTime, player.position.x - player.width/2, player.position.y - player.height);
@@ -421,20 +427,40 @@ function runGame(deltaTime)
 	var scoreText = "Score: " + player.score;
 	context.fillText(scoreText, 400, 50);
 	
+	if (highScore <= player.score)
+	{
+		highScore = player.score;
+	}
 }
 
 function runGameOver()
-{
+{	
+	context.drawImage(gameOverSplashBG, 0, 0);
+	context.fillStyle = "#FFE4C4";
+	context.font="36px Arial Black";
+	var yourScore = "Your score:";
+	var yourScoreMeasure = context.measureText(yourScore);
+	context.fillText(yourScore, SCREEN_WIDTH/2 - (yourScoreMeasure.width/2), SCREEN_HEIGHT/2 + 10);
+
+	context.fillStyle = "white";
+	context.font="128px Arial Black";
+	var scoreText = "Score: " + player.score;
+	var textMeasure = context.measureText(player.score);
+	context.fillText(player.score, SCREEN_WIDTH/2 - (textMeasure.width/2), SCREEN_HEIGHT/2 + 140);
+	var bestScore = player.score;
+	context.fillStyle = "#FFD700";
+	context.font="48px Arial Black";
+	var bestText = "Best run: " + highScore;
+	var textMeasureBest = context.measureText(bestText);
+	context.fillText(bestText, SCREEN_WIDTH/2 - (textMeasureBest.width/2), SCREEN_HEIGHT - 30);
+
+	
+
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
 	{
 		resetGame();
 		gameState = STATE_SPLASH;
 	}
-	context.drawImage(gameOverSplashBG, 0, 0);
-	context.fillStyle = "white";
-	context.font="32px Yu Gothic";
-	var scoreText = "Score: " + player.score;
-	context.fillText(scoreText, 400, 50);
 }
 
 function run()
