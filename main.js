@@ -85,6 +85,7 @@ var gameState = STATE_SPLASH;
 
 var musicBackground;
 var sfxJump;
+var sfxDeath;
 
 
 
@@ -217,6 +218,17 @@ function initialize()
 		buffer: true,
 		volume: 1,
 		onend: function() 
+		{
+			isSfxPlaying = false;
+		}
+	});
+	
+	sfxDeath = new Howl(
+	{
+		urls: ["death.wav"],
+		buffer: true,
+		volume: 1,
+		onend: function()
 		{
 			isSfxPlaying = false;
 		}

@@ -63,6 +63,7 @@ Player.prototype.update = function(deltaTime)
 	switch(this.playerState)
 	{
 		case DEAD:
+		
 			if (this.timer <= 0)
 			{
 				gameState = STATE_SPLASH;
@@ -340,6 +341,7 @@ Player.prototype.kill = function()
 {
 	if (this.timer < 0)
 		this.timer = 1;
+	sfxDeath.play();
 	this.velocity.x = 0;
 	this.jumping = false;
 	this.falling = true;
