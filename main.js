@@ -50,8 +50,8 @@ var LAYER_BACKGOUND = 0;
 var LAYER_BACKGOUND2 = 1;
 var LAYER_PLATFORMS = 2;
 var LAYER_OBJECT_ENEMIES = 3;
-var LAYER_OBJECT_POWERUPS = 4;
-var LAYER_OBJECT_TRIGGERS = 5;
+var LAYER_OBJECT_TRIGGERS = 4;
+var LAYER_OBJECT_SPEEDBOOSTS = 5;
 
 var worldOffsetX = 10;
 
@@ -97,7 +97,8 @@ var fpsTime = 0;
 var highScore = 0;
 var player = new Player();
 var keyboard = new Keyboard();
-var enemies = []
+var enemies = [];
+var powerups = [];
 var camera = new Camera();
 
 // loading of images
@@ -161,6 +162,21 @@ function initialize()
 				var px = tileToPixel(x);
 				var py = tileToPixel(y + 0.9);
 				enemies.push(new Enemy(px, py));
+			}
+			idx++;
+		}
+	} 
+	
+	idx = 0;
+	for(var y = 1; y < level1.layers[LAYER_OBJECT_SPEEDBOOSTS].height; y++) 
+	{
+		for(var x = 0; x < level1.layers[LAYER_OBJECT_SPEEDBOOSTS].width; x++) 
+		{
+			if(level1.layers[LAYER_OBJECT_SPEEDBOOSTS].data[idx] != 0) 
+			{
+				var px = tileToPixel(x);
+				var py = tileToPixel(y + 0.9);
+				powerups.push(new Powerup(px, py, 0));
 			}
 			idx++;
 		}
@@ -279,11 +295,7 @@ function drawMap(deltaTime)
 // menu/splash function. runs every frame.
 function runSplash(deltaTime)
 {
-	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
-	{
-	resetGame();
-	gameState = STATE_GAME;
-	}
+	
 	context.drawImage(splashBG, 0, 0);
 	context.font="20px Arial Black";
 	context.fillStyle= '#FFD700';
@@ -300,7 +312,11 @@ function runSplash(deltaTime)
 	player.position.y = SCREEN_HEIGHT/4;
 	player.sprite.update(deltaTime);
 	player.draw();
-
+	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
+	{
+		resetGame();
+		gameState = STATE_GAME;
+	}
 }
 
 function runGame(deltaTime)
@@ -326,6 +342,37 @@ function runGame(deltaTime)
 			player.kill();
 		}
 			
+	}
+	
+	for (var i = 0; i<powerups.length; i++)
+	{
+		powerups[i].draw();
+		if (intersects(player, powerups[i]))
+		{
+			
+			if (player.timer < 0)
+				switch (powerups[i].type)
+				{
+					case 0: 
+						player.timer = 5;
+						
+						player.playerState = 3;
+
+					break;
+					case 1:
+					
+					break;
+					case 2:
+					
+					break;
+					
+					case 3:
+					
+					break;
+				}
+			powerups.splice(i, 1);
+
+		}
 	}
 	
 	//drawMap(deltaTime);

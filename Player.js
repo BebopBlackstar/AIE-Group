@@ -59,6 +59,9 @@ var Player = function()
 	
 Player.prototype.update = function(deltaTime)
 {
+	if (this.timer < 0)
+		this.playerState = RUN;
+	
 	this.timer -= deltaTime;
 	switch(this.playerState)
 	{
@@ -341,10 +344,12 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	}
 	if (keyboard.isKeyDown(keyboard.KEY_7) == true)
 	{
+		this.timer = 5;
 		this.playerState = SPEED_BOOST;
 	}
 	if (keyboard.isKeyDown(keyboard.KEY_8) == true)
 	{
+		this.timer = 5;
 		this.playerState = SPEED_SLOW;
 	}
 	
@@ -355,6 +360,7 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	}
 	
 }
+
 Player.prototype.kill = function()
 {
 	if (this.timer < 0)
@@ -369,6 +375,7 @@ Player.prototype.kill = function()
 		this.sprite.setAnimation(ANIM_DEATH_RIGHT);
 	}
 }
+
 	
 
 

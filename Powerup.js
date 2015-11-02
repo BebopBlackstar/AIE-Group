@@ -5,23 +5,23 @@ var Powerup = function(x, y, type)
 	this.type = 0;
 	this.type = type;
 	
-	this.width = 36;
-	this.height = 48;
+	this.width = 32;
+	this.height = 32;
 	
 	this.position = new Vector2();
 	this.position.set(x, y);
 	
 	this.timer = 0;
 	
-     var potions=document.getElementById("powerups.png");
+	this.potions = document.createElement("img");
 
+	
 	switch (type)
 	{
 		case 0:
-		
+			this.potions.src = "firepotion.png";
 		break;
 		case 1:
-		
 		break;
 		case 2:
 		
@@ -36,21 +36,6 @@ var Powerup = function(x, y, type)
 
 Powerup.prototype.draw = function()
 {
-	switch (type)
-	{
-		case 0:
-		context.drawImage(powerup, this.x - this.width, this.y - this.width)
-
-		break;
-		case 1:
-		
-		break;
-		case 2:
-		
-		break;
-		
-		case 3:
-		
-		break;
-	}
+	
+	context.drawImage(this.potions, this.position.x - this.width - camera.worldOffsetX, this.position.y - this.height)
 }
