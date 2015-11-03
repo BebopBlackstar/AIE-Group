@@ -5,9 +5,9 @@ var ANIM_ENEMY_MAX = 2;
 var Enemy = function(x, y)
 {
 	
-	this.sprite = new Sprite("imp.png");
-	this.sprite.buildAnimation(4, 4, 64, 64, 0.1, [12, 13, 14, 15]);
-	this.sprite.buildAnimation(4, 4, 64, 64, 0.1, [4, 5, 6, 7]);
+	this.sprite = new Sprite("imps.png");
+	this.sprite.buildAnimation(4, 2, 64, 45, 0.1, [0, 1, 2, 3]);
+	this.sprite.buildAnimation(4, 2, 64, 45, 0.1, [4, 5, 6, 7]);
 	
 	for(var i = 0; i < ANIM_ENEMY_MAX; i++)
 	{
@@ -23,7 +23,7 @@ var Enemy = function(x, y)
 	this.pause = 0;
 	
 	this.width = 64;
-	this.height = 64;
+	this.height = 45;
 }
 
 Enemy.prototype.update = function(deltaTime)
@@ -45,8 +45,8 @@ Enemy.prototype.update = function(deltaTime)
 		var ty = pixelToTile(this.position.y);
 		var nx = (this.position.x) % TILE;		//true if enemy overlaps right
 		var ny = (this.position.y) % TILE;		//true if enemy overlaps below
-		var cell = cellAtTileCoord(LAYER_PLATFORMS, tx , ty);
-		var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
+		var cell = cellAtTileCoord(LAYER_PLATFORMS, tx, ty);
+		var cellleft = cellAtTileCoord(LAYER_PLATFORMS, tx - 1, ty);
 		var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);
 		var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty + 1);
 		
@@ -57,7 +57,7 @@ Enemy.prototype.update = function(deltaTime)
 			if (this.sprite.currentAnimation != ANIM_ENEMY_RIGHT)
 				this.sprite.setAnimation(ANIM_ENEMY_RIGHT);		
 			
-			if(celldiag && !cellright)
+			if(celldiag && !cell)
 			{
 				ddx = ddx + ENEMY_ACCEL;	//enemy wants to go right				
 			}
@@ -76,7 +76,7 @@ Enemy.prototype.update = function(deltaTime)
 			if (this.sprite.currentAnimation != ANIM_ENEMY_LEFT)
 				this.sprite.setAnimation(ANIM_ENEMY_LEFT);
 			
-			if(celldown && !cell)
+			if(celldown && !cellleft)
 			{
 				ddx = ddx - ENEMY_ACCEL;	//enemy wants to go left
 				

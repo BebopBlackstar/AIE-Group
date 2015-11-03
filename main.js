@@ -164,7 +164,7 @@ function initialize()
 			if(level1.layers[LAYER_OBJECT_ENEMIES].data[idx] != 0) 
 			{
 				var px = tileToPixel(x);
-				var py = tileToPixel(y + 0.9);
+				var py = tileToPixel(y + 1.1);
 				enemies.push(new Enemy(px, py));
 			}
 			idx++;
@@ -172,19 +172,20 @@ function initialize()
 	} 
 	
 	idx = 0;
-	for(var y = 1; y < level1.layers[LAYER_OBJECT_SPEEDBOOSTS].height; y++) 
+	for(var y = 1; y < level1.layers[LAYER_OBJECT_TRIGGERS].height; y++) 
 	{
-		for(var x = 0; x < level1.layers[LAYER_OBJECT_SPEEDBOOSTS].width; x++) 
+		for(var x = 0; x < level1.layers[LAYER_OBJECT_TRIGGERS].width; x++) 
 		{
-			if(level1.layers[LAYER_OBJECT_SPEEDBOOSTS].data[idx] != 0) 
+			if(level1.layers[LAYER_OBJECT_TRIGGERS].data[idx] != 0) 
 			{
 				var px = tileToPixel(x);
-				var py = tileToPixel(y + 0.9);
+				var py = tileToPixel(y);
 				powerups.push(new Powerup(px, py, 0));
 			}
 			idx++;
 		}
 	} 
+	
 	/*idx = 0;
 	for(var y = 1; y < level1.layers[LAYER_OBJECT_ENEMIES2].height; y++)
 	{
