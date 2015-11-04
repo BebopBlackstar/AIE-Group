@@ -90,8 +90,6 @@ Player.prototype.update = function(deltaTime)
 			this.right = true;
 			this.sprite.update(deltaTime);
 			camera.updateCamera(deltaTime, 1);
-
-			
 			this.animations(deltaTime);
 			this.movement(deltaTime, MAXDX, MAXDY);
 		break;
@@ -107,6 +105,7 @@ Player.prototype.update = function(deltaTime)
 			this.movement(deltaTime, MAXDX * 2, MAXDY);
 		break;
 		
+		
 		case SPEED_SLOW:
 			this.speed = 0.5;
 			this.right = true;
@@ -116,8 +115,9 @@ Player.prototype.update = function(deltaTime)
 			
 			this.animations(deltaTime);
 			this.movement(deltaTime, MAXDX, MAXDY);
-			
-			
+		break;	
+		
+		
 	}
 }
 
@@ -247,7 +247,7 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);
 	var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty + 1);
 	
-	if (this.velocity.x > 0)
+	if (this.velocity.x > 0 && !this.jumping)
 	{
 		musicBackground.play();
 	}

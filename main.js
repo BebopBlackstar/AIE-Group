@@ -126,7 +126,61 @@ background.src = "caveedited.png";
 var fireEmitter = createFireEmitter("fire.png", (SCREEN_WIDTH/4)*3, SCREEN_HEIGHT-100);
 var fireWallEmitter = createFireWallEmitter("fire.png", 0, 0);
 
+// background music
+musicBackground = new Howl
+(
+	{
+		urls: ["run.wav"],
+		loop: false,
+		buffer: true,
+		volume: 0.2
+	} 
+);
 
+
+sfxJump = new Howl(
+{
+	urls: ["jump.wav"],
+	buffer: true,
+	volume: 1,
+	onend: function() 
+	{
+		isSfxPlaying = false;
+	}
+});
+
+sfxDeath = new Howl(
+{
+	urls: ["death.wav"],
+	buffer: true,
+	volume: 1,
+	onend: function()
+	{
+		isSfxPlaying = false;
+	}
+});
+
+sfxPowerup = new Howl(
+{
+	urls: ["powerup.wav"],
+	buffer: true,
+	volume: 1,
+	onend: function()
+	{
+		isSfxPlaying = false;
+	}
+});
+
+sfxPowerdown = new Howl(
+{
+	urls: ["powerdown.wav"],
+	buffer: true,
+	volume: 1,
+	onend: function()
+	{
+		isSfxPlaying = false;
+	}
+});
 
 var cells = []; // the array that holds our simplified collision data
 function initialize() 
@@ -157,7 +211,7 @@ function initialize()
 	}
 	
 	idx = 0;
-	for(var y = 1; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++) 
+	for(var y = 0; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++) 
 	{
 		for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMIES].width; x++) 
 		{
@@ -221,50 +275,7 @@ function initialize()
 		}
 	}
 	
-	// background music
-	musicBackground = new Howl
-	(
-		{
-			urls: ["run.wav"],
-			loop: false,
-			buffer: true,
-			volume: 0.5
-		} 
-	);
-	
-	
-	sfxJump = new Howl(
-	{
-		urls: ["jump.wav"],
-		buffer: true,
-		volume: 1,
-		onend: function() 
-		{
-			isSfxPlaying = false;
-		}
-	});
-	
-	sfxDeath = new Howl(
-	{
-		urls: ["death.wav"],
-		buffer: true,
-		volume: 1,
-		onend: function()
-		{
-			isSfxPlaying = false;
-		}
-	});
-	
-	sfxPowerup = new Howl(
-	{
-		urls: ["powerup.wav"],
-		buffer: true,
-		volume: 1,
-		onend: function()
-		{
-			isSfxPlaying = false;
-		}
-	});
+
 
 	
 
@@ -412,7 +423,7 @@ function runGame(deltaTime)
 		powerups[i].draw();
 		if (intersects(player, powerups[i]))
 		{
-			
+			sfxPowerup.play();
 			if (player.timer < 0)
 				switch (powerups[i].type)
 				{
@@ -434,7 +445,7 @@ function runGame(deltaTime)
 					break;
 				}
 			powerups.splice(i, 1);
-
+			
 		}
 	}
 	
