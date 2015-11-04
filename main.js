@@ -50,8 +50,11 @@ var LAYER_BACKGROUND = 0;
 var LAYER_BACKGROUND2 = 1;
 var LAYER_PLATFORMS = 2;
 var LAYER_OBJECT_ENEMIES = 3;
-var LAYER_OBJECT_TRIGGERS = 4;
-var LAYER_OBJECT_SPEEDBOOSTS = 5;
+var LAYER_OBJECT_SPEEDBOOSTS = 4;
+var LAYER_OBJECT_TRIGGERS = 5;
+var LAYER_OBJECT_ENEMIES2 = 6;
+var LAYER_OBJECT_SPEEDPENALTIES = 7;
+var LAYER_OBJECT_POGOSTICKS = 8;
 
 
 var worldOffsetX = 10;
@@ -131,10 +134,10 @@ var fireEmitter = createFireEmitter("sparkle.png", (SCREEN_WIDTH/4)*3, SCREEN_HE
 // background music
 musicBackground = new Howl(
 	{
-		urls: ["music.wav"],
+		urls: ["spookyscaryskeletons.mp3"],
 		loop: true,
 		buffer: true,
-		volume: 0.2
+		volume: 1
 	}
 )
 
@@ -221,14 +224,30 @@ function initialize()
 	}
 	
 	idx = 0;
-	for(var y = 0; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++) 
+	for(var y = 1; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++) 
 	{
 		for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMIES].width; x++) 
 		{
 			if(level1.layers[LAYER_OBJECT_ENEMIES].data[idx] != 0) 
 			{
 				var px = tileToPixel(x);
-				var py = tileToPixel(y + 1.1);
+				var py = tileToPixel(y);
+				
+				var type = rand(0, 2);
+				
+				switch(type)
+				{
+					case 0:
+					enemies.push(new Enemy(px, py));
+					break;
+					
+					case 1:
+					enemies.push(new Enemy2(px, py));
+					break;
+				}
+				
+				
+				//enemies.push(new Enemy(px, py));
 				
 				var type = rand(0, 2);
 				
@@ -300,10 +319,36 @@ function initialize()
 		}
 	}
 	
+	idx = 0;
+	for(var y = 1; y < level1.layers[LAYER_OBJECT_SPEEDPENALTIES].height; y++) 
+	{
+		for(var x = 0; x < level1.layers[LAYER_OBJECT_SPEEDPENALTIES].width; x++) 
+		{
+			if(level1.layers[LAYER_OBJECT_SPEEDPENALTIES].data[idx] != 0) 
+			{
+				var px = tileToPixel(x);
+				var py = tileToPixel(y);
+				powerups.push(new Powerup(px, py, 1));
+			}
+			idx++;
+		}
+	} 
 	
 
-	
-
+	idx = 0;
+	for(var y = 1; y < level1.layers[LAYER_OBJECT_POGOSTICKS].height; y++) 
+	{
+		for(var x = 0; x < level1.layers[LAYER_OBJECT_POGOSTICKS].width; x++) 
+		{
+			if(level1.layers[LAYER_OBJECT_POGOSTICKS].data[idx] != 0) 
+			{
+				var px = tileToPixel(x);
+				var py = tileToPixel(y);
+				powerups.push(new Powerup(px, py, 2));
+			}
+			idx++;
+		}
+	} 
 }
 
 function intersects(o1, o2)
@@ -311,9 +356,8 @@ function intersects(o1, o2)
 	if(o2.position.y + o2.height/2 < o1.position.y - o1.height/2 || o2.position.x + o2.width/2 < o1.position.x - o1.width/2 ||	o2.position.x - o2.width/2 > o1.position.x + o1.width/2 || o2.position.y - o2.height/2 > o1.position.y + o1.height/2)
 	{
 		//draws collision squares for testing
-		context.fillRect(o2.position.x - o2.width/2 - camera.worldOffsetX, o2.position.y - o2.height, o2.width, o2.height)
-		
-		context.fillRect(o1.position.x - o1.width/2 - camera.worldOffsetX, o1.position.y - o1.height, o1.width, o1.height)
+		//context.fillRect(o2.position.x - o2.width/2 - camera.worldOffsetX, o2.position.y - o2.height, o2.width, o2.height)
+		//context.fillRect(o1.position.x - o1.width/2 - camera.worldOffsetX, o1.position.y - o1.height, o1.width, o1.height)
 		return false;
 	}
 	return true;
@@ -366,6 +410,7 @@ function resetGame()
 	player = new Player();
 	camera = new Camera(); 
 	enemies.splice(0, enemies.length);
+	musicBackground.stop();
 	runningBackground.stop();
 	initialize();
 }
@@ -384,7 +429,7 @@ function drawMap(deltaTime)
 function runSplash(deltaTime)
 {
 	
-	musicBackground.play();
+	//musicBackground.play();
 	runningBackground.stop();
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
 	{
@@ -413,6 +458,7 @@ function runSplash(deltaTime)
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
 	{
 	resetGame();
+	musicBackground.play();
 	gameState = STATE_GAME;
 	}
 }
@@ -424,7 +470,7 @@ function runGame(deltaTime)
 
 	context.drawImage(logo, 500 - camera.origin.x, 100)
 	
-	musicBackground.play();
+	//musicBackground.play();
 	
 	if(keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) != true)
 	{
@@ -459,18 +505,20 @@ function runGame(deltaTime)
 
 					break;
 					case 1:
+					player.timer = 7.5;
+						
+						player.playerState = 4; 
 					
 					break;
 					case 2:
-					
-					break;
-					
-					case 3:
+						player.timer = 5;
+						
+						player.playerState = 8;
 					
 					break;
 				}
 			powerups.splice(i, 1);
-			sfxPowerdown.play();
+			//sfxPowerdown.play();
 		}
 	}
 	

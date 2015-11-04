@@ -3,8 +3,9 @@ var ANIM_IDLE_RIGHT = 1;
 var ANIM_DEATH_RIGHT = 2;
 var ANIM_JUMP_RIGHT = 3;
 var ANIM_IDLE_LARGE = 4;
+var ANIM_POGOSTICK = 5;
 
-var ANIM_MAX = 5;
+var ANIM_MAX = 6;
 
 var RUN = 1;
 var DEAD = 2;
@@ -26,6 +27,7 @@ var Player = function()
 
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1, [0]);
 	this.sprite.buildAnimation(2, 4, 90, 96, 0.25,[4, 5, 6, 7]);
+	this.sprite.buildAnimation(5, 5, 36, 96, 0.25,[20]);
 	
 	for(var i=0; i<ANIM_MAX; i++)
 	{
@@ -57,7 +59,7 @@ var Player = function()
 	this.playerState = RUN;
 	this.dead = false;
 	
-	this.timer = 0;
+	this.timer = 1;
 	
 	this.totalTime = 0;
 	};
@@ -66,9 +68,12 @@ var Player = function()
 Player.prototype.update = function(deltaTime)
 {
 	if (this.timer < 0)
+	{
 		this.playerState = RUN;
-	
-	this.timer -= deltaTime;
+		//sfxPowerdown.play();
+	}
+	else	
+		this.timer -= deltaTime;
 	
 	switch(this.playerState)
 	{
@@ -83,7 +88,7 @@ Player.prototype.update = function(deltaTime)
 			this.sprite.setAnimation(ANIM_DEATH_RIGHT);
 			
 			this.speed = 0;
-			this.movement(deltaTime, 0, MAXDY);
+			this.movement(deltaTime, 0, MAXDY/8);
 			this.sprite.update(deltaTime);
 			
 			
@@ -108,10 +113,6 @@ Player.prototype.update = function(deltaTime)
 			
 			this.animations(deltaTime);
 			this.movement(deltaTime, MAXDX * 2, MAXDY);
-			if (this.timer < 0)
-			{
-				sfxPowerdown.play();
-			}
 			
 		break;
 		
@@ -127,7 +128,7 @@ Player.prototype.update = function(deltaTime)
 			this.movement(deltaTime, MAXDX, MAXDY);
 		break;	
 		
-				case CONTINOUS_JUMPING:
+		case CONTINOUS_JUMPING:
 			this.speed = 1;
 			this.right = true;
 			this.sprite.update(deltaTime);
@@ -161,6 +162,10 @@ Player.prototype.animations = function(deltaTime)
 	this.left = false;
 	this.right = false;
 	this.jump = false;
+	
+	if (this.playerState == CONTINOUS_JUMPING && !this.jumping && !this.falling)
+		this.jump = true;
+	
 	if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping && !this.dead)
 	{
 		this.sprite.setAnimation(ANIM_WALK_RIGHT);
@@ -234,6 +239,8 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -MAXDX * this.speed, MAXDX * this.speed);
 	this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
 	
+	this.collision();
+	
 		// calculate the new position and velocity:
 	this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
 	this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
@@ -246,7 +253,7 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 		// clamp at zero to prevent friction from making us jiggle side to side
 		this.velocity.x = 0;
 	}
-
+		this.collision();
 	
 	// we’ll insert code here later
 	// collision detection
@@ -257,7 +264,72 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	// This means we can short-circuit and avoid building a general purpose
 	// collision detection engine by simply looking at the 1 to 4 cells that
 	// the player occupies:
-	var tx = pixelToTile(this.position.x);
+
+
+	
+	
+	// Hacks and "Checkpoints"
+	if (keyboard.isKeyDown(keyboard.KEY_0) == true)
+	{
+		this.position.y = -200;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_1) == true)
+	{
+		//"Put a breakpoint here to freeze the game at will"
+		var freezethegamehere = 1;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_2) == true)
+	{
+		this.position.y = 432;
+		this.position.x = 5280;
+		camera.origin.x = 5296 - 500;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_3) == true)
+	{
+		this.position.y = 432;
+		this.position.x = 7834;
+		camera.origin.x = 7834 - 500;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_4) == true)
+	{
+		this.position.y = 432;
+		this.position.x = 8600;
+		camera.origin.x = 8600 - 500;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_5) == true)
+	{
+		this.position.y = 432;
+		this.position.x = 11186;
+		camera.origin.x = this.position.x - 500;
+	}
+	
+	// hack to shortcut to end of level
+	if (keyboard.isKeyDown(keyboard.KEY_6) == true)
+	{
+		this.playerState = RUN;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_7) == true)
+	{
+		this.timer = 5;
+		this.playerState = SPEED_BOOST;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_8) == true)
+	{
+		this.timer = 5;
+		this.playerState = SPEED_SLOW;
+	}
+	
+	if (keyboard.isKeyDown(keyboard.KEY_9) == true)
+	{
+		this.kill();
+
+	}
+	
+}
+
+Player.prototype.collision = function()
+{
+		var tx = pixelToTile(this.position.x);
 	var ty = bound(pixelToTile(this.position.y), 1, 30);
 	var nx = (this.position.x)%TILE; // true if player overlaps right
 	var ny = (this.position.y)%TILE; // true if player overlaps below
@@ -331,81 +403,23 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	{
 		this.kill();
 	}
-
-	
-	
-	// Hacks and "Checkpoints"
-	if (keyboard.isKeyDown(keyboard.KEY_0) == true)
-	{
-		this.position.y = -200;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_1) == true)
-	{
-		//"Put a breakpoint here to freeze the game at will"
-		var freezethegamehere = 1;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_2) == true)
-	{
-		this.position.y = 432;
-		this.position.x = 5280;
-		camera.origin.x = 5296 - 500;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_3) == true)
-	{
-		this.position.y = 432;
-		this.position.x = 7834;
-		camera.origin.x = 7834 - 500;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_4) == true)
-	{
-		this.position.y = 432;
-		this.position.x = 8600;
-		camera.origin.x = 8600 - 500;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_5) == true)
-	{
-		this.position.y = 432;
-		this.position.x = 11186;
-		camera.origin.x = this.position.x - 500;
-	}
-	
-	// hack to shortcut to end of level
-	if (keyboard.isKeyDown(keyboard.KEY_6) == true)
-	{
-		this.playerState = RUN;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_7) == true)
-	{
-		this.timer = 5;
-		this.playerState = SPEED_BOOST;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_8) == true)
-	{
-		this.timer = 5;
-		this.playerState = SPEED_SLOW;
-	}
-	
-	if (keyboard.isKeyDown(keyboard.KEY_9) == true)
-	{
-		this.kill();
-
-	}
-	
 }
-
 Player.prototype.kill = function()
 {
-	if (this.timer < 0)
-		this.timer = 2;
-	sfxDeath.play();
-	this.velocity.x = 0;
-	this.jumping = false;
-	this.falling = true;
-	this.dead = true;
-	this.playerState = DEAD;
-	if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)
+	if (!this.dead)
 	{
-		this.sprite.setAnimation(ANIM_DEATH_RIGHT);
+		if (this.timer < 0)
+			this.timer = 2;
+		sfxDeath.play();
+		this.velocity.x = 0;
+		this.jumping = false;
+		this.falling = true;
+		this.dead = true;
+		this.playerState = DEAD;
+		if (this.sprite.currentAnimation != ANIM_DEATH_RIGHT)
+		{
+			this.sprite.setAnimation(ANIM_DEATH_RIGHT);
+		}
 	}
 }
 
