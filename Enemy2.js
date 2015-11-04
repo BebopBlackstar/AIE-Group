@@ -40,13 +40,13 @@ Enemy2.prototype.update = function(deltaTime)
 	else
 	{
 	
-		//collision detection
+	//collision detection
 		var tx = pixelToTile(this.position.x);
 		var ty = pixelToTile(this.position.y);
 		var nx = (this.position.x) % TILE;		//true if enemy overlaps right
 		var ny = (this.position.y) % TILE;		//true if enemy overlaps below
-		var cell = cellAtTileCoord(LAYER_PLATFORMS, tx , ty);
-		var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
+		var cell = cellAtTileCoord(LAYER_PLATFORMS, tx, ty);
+		var cellleft = cellAtTileCoord(LAYER_PLATFORMS, tx - 1, ty);
 		var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);
 		var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty + 1);
 		
@@ -57,7 +57,7 @@ Enemy2.prototype.update = function(deltaTime)
 			if (this.sprite.currentAnimation != ANIM_ENEMY_RIGHT)
 				this.sprite.setAnimation(ANIM_ENEMY_RIGHT);		
 			
-			if(celldiag && !cellright)
+			if(celldiag && !cell)
 			{
 				ddx = ddx + ENEMY_ACCEL;	//enemy wants to go right				
 			}
@@ -67,7 +67,7 @@ Enemy2.prototype.update = function(deltaTime)
 			{
 				this.velocityX = 0;
 				this.moveRight = false;
-				this.pause = 2.5;
+				this.pause = 1;
 			}
 		}
 		
@@ -76,7 +76,7 @@ Enemy2.prototype.update = function(deltaTime)
 			if (this.sprite.currentAnimation != ANIM_ENEMY_LEFT)
 				this.sprite.setAnimation(ANIM_ENEMY_LEFT);
 			
-			if(celldown && !cell)
+			if(celldown && !cellleft)
 			{
 				ddx = ddx - ENEMY_ACCEL;	//enemy wants to go left
 				
@@ -86,7 +86,7 @@ Enemy2.prototype.update = function(deltaTime)
 			{
 				this.velocityX = 0;
 				this.moveRight = true;
-				this.pause = 2.5;
+				this.pause = 1;
 			}
 		}
 		

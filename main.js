@@ -229,7 +229,22 @@ function initialize()
 			{
 				var px = tileToPixel(x);
 				var py = tileToPixel(y + 1.1);
-				enemies.push(new Enemy(px, py));
+				
+				var type = rand(0, 2);
+				
+				switch(type)
+				{
+					case 0:
+					enemies.push(new Enemy(px, py));
+					break;
+					
+					case 1:
+					enemies.push(new Enemy2(px, py));
+					break;
+				}
+				
+				
+				//enemies.push(new Enemy(px, py));
 			}
 			idx++;
 		}
@@ -355,12 +370,10 @@ function resetGame()
 	initialize();
 }
 
-
-
-
-
-
-
+function rand(floor, ceil)
+{
+	return Math.floor((Math.random() * (ceil-floor)) + floor);
+}
 
 // function draws map to screen. Is called every frame.
 function drawMap(deltaTime)
@@ -442,6 +455,7 @@ function runGame(deltaTime)
 						player.timer = 5;
 						
 						player.playerState = 3;
+					
 
 					break;
 					case 1:
