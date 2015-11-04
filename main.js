@@ -172,11 +172,11 @@ function initialize()
 	} 
 	
 	idx = 0;
-	for(var y = 1; y < level1.layers[LAYER_OBJECT_TRIGGERS].height; y++) 
+	for(var y = 1; y < level1.layers[LAYER_OBJECT_SPEEDBOOSTS].height; y++) 
 	{
-		for(var x = 0; x < level1.layers[LAYER_OBJECT_TRIGGERS].width; x++) 
+		for(var x = 0; x < level1.layers[LAYER_OBJECT_SPEEDBOOSTS].width; x++) 
 		{
-			if(level1.layers[LAYER_OBJECT_TRIGGERS].data[idx] != 0) 
+			if(level1.layers[LAYER_OBJECT_SPEEDBOOSTS].data[idx] != 0) 
 			{
 				var px = tileToPixel(x);
 				var py = tileToPixel(y);
