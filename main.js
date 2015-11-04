@@ -126,8 +126,8 @@ tileset.src = "tileset.png";
 var background = document.createElement("img");
 background.src = "caveedited.png";
 
-var fireEmitter = createFireEmitter("fire.png", (SCREEN_WIDTH/4)*3, SCREEN_HEIGHT-100);
-var fireWallEmitter = createFireWallEmitter("fire.png", 0, 0);
+var fireEmitter = createFireEmitter("sparkle.png", (SCREEN_WIDTH/4)*3, SCREEN_HEIGHT-100);
+
 
 
 
@@ -491,12 +491,8 @@ function runGame(deltaTime)
 	{
 		gameState = STATE_GAMEOVER;
 	}
-	
-	fireEmitter.update(deltaTime, player.position.x - player.width/2, player.position.y - player.height);
-	//fireEmitter.draw();
 
-	fireWallEmitter.update(deltaTime, camera.origin.x + 50,640);
-	//fireWallEmitter.draw();
+
 
 	// update the frame counter
 	fpsTime += deltaTime;

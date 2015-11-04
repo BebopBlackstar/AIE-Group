@@ -16,6 +16,8 @@ var JUMP_PENALTY = 6;
 var STUCK_RUNNING = 7;
 var CONTINOUS_JUMPING = 8;
 
+
+
 var Player = function() 
 {
 	this.sprite = new Sprite("skeleton.png");
@@ -59,6 +61,8 @@ var Player = function()
 	this.dead = false;
 	
 	this.timer = 0;
+	
+	this.totalTime = 0;
 	};
 	
 	
@@ -68,6 +72,7 @@ Player.prototype.update = function(deltaTime)
 		this.playerState = RUN;
 	
 	this.timer -= deltaTime;
+	
 	switch(this.playerState)
 	{
 		case DEAD:
@@ -131,8 +136,20 @@ Player.prototype.update = function(deltaTime)
 			this.animations(deltaTime);
 			this.sprite.setAnimation(ANIM_POGOSTICK);
 			this.movement(deltaTime, MAXDX, MAXDY * 1.5);
-
+		break;
 			
+	}
+	//if (this.playerState != RUN)
+	{
+		this.totalTime = this.totalTime + deltaTime*5;
+
+		fireEmitter.position.y = this.position.y + (20*(Math.cos(this.totalTime*3)));
+		fireEmitter.position.x = this.position.x - camera.worldOffsetX + (20*(Math.sin(this.totalTime*3)));
+		fireEmitter.update(deltaTime);
+
+		
+		//fireEmitter.draw();
+
 	}
 }
 
