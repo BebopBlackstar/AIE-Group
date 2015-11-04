@@ -9,21 +9,28 @@ var Powerup = function(x, y, type)
 	this.height = 32;
 	
 	this.position = new Vector2();
-	this.position.set(x, y);
+	this.position.set(x + 8, y);
 	
 	this.timer = 0;
 	
-	this.potions = document.createElement("img");
+	this.image = document.createElement("img");
 
 	
 	switch (type)
 	{
 		case 0:
-			this.potions.src = "firepotion.png";
+			//SPEED  BOOST 
+			this.image.src = "firepotion.png";
 		break;
 		case 1:
+			//SLOW SPEED
+			this.image.src = "plantpotion.png"
 		break;
 		case 2:
+			//POGOSTICK / CONTINOUS JUMPING
+			this.image.src = "pogostick.png"
+			this.width = 16;
+			this.height = 36
 		
 		break;
 		
@@ -37,5 +44,5 @@ var Powerup = function(x, y, type)
 Powerup.prototype.draw = function()
 {
 	
-	context.drawImage(this.potions, this.position.x - this.width - camera.worldOffsetX, this.position.y - this.height)
+	context.drawImage(this.image, this.position.x - this.width/2 - camera.worldOffsetX, this.position.y - this.height)
 }

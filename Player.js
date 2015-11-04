@@ -122,24 +122,19 @@ Player.prototype.update = function(deltaTime)
 			this.movement(deltaTime, MAXDX, MAXDY);
 		break;	
 		
+				case CONTINOUS_JUMPING:
+			this.speed = 1;
+			this.right = true;
+			this.sprite.update(deltaTime);
+
+			camera.updateCamera(deltaTime, 1);
+			
+			this.animations(deltaTime);
+			this.sprite.setAnimation(ANIM_POGOSTICK);
+			this.movement(deltaTime, MAXDX, MAXDY * 1.5);
 		
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 Player.prototype.animations = function(deltaTime)
