@@ -83,11 +83,13 @@ var STATE_GAMEOVER = 2;
 
 var gameState = STATE_SPLASH;
 
+var runningBackground;
 var musicBackground;
 var sfxJump;
 var sfxDeath;
 var sfxPowerup;
 var sfxRun;
+
 
 
 
@@ -127,13 +129,21 @@ var fireEmitter = createFireEmitter("fire.png", (SCREEN_WIDTH/4)*3, SCREEN_HEIGH
 var fireWallEmitter = createFireWallEmitter("fire.png", 0, 0);
 
 // background music
-musicBackground = new Howl
-(
+musicBackground = new Howl(
+	{
+		urls: ["music.wav"],
+		loop: true,
+		buffer: true,
+		volume: 0.2
+	}
+)
+
+runningBackground = new Howl(
 	{
 		urls: ["run.wav"],
 		loop: false,
 		buffer: true,
-		volume: 0.2
+		volume: 0.3
 	} 
 );
 
@@ -275,7 +285,7 @@ function initialize()
 		}
 	}
 	
-
+	
 
 	
 
@@ -341,7 +351,7 @@ function resetGame()
 	player = new Player();
 	camera = new Camera(); 
 	enemies.splice(0, enemies.length);
-	musicBackground.stop();
+	runningBackground.stop();
 	initialize();
 }
 
@@ -361,8 +371,8 @@ function drawMap(deltaTime)
 function runSplash(deltaTime)
 {
 	
-
-	musicBackground.stop();
+	musicBackground.play();
+	runningBackground.stop();
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
 	{
 	resetGame();
@@ -396,11 +406,12 @@ function runSplash(deltaTime)
 
 function runGame(deltaTime)
 {
-	musicBackground.stop();
 	context.drawImage(background, -camera.origin.x%(background.width*3)/3, 0)
 	context.drawImage(background, -camera.origin.x%(background.width*3)/3 + background.width, 0)
 
 	context.drawImage(logo, 500 - camera.origin.x, 100)
+	
+	musicBackground.play();
 	
 	if(keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) != true)
 	{

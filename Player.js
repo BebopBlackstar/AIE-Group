@@ -249,7 +249,7 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	
 	if (this.velocity.x > 0 && !this.jumping)
 	{
-		musicBackground.play();
+		runningBackground.play();
 	}
 	
 	
