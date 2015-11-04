@@ -50,8 +50,11 @@ var LAYER_BACKGROUND = 0;
 var LAYER_BACKGROUND2 = 1;
 var LAYER_PLATFORMS = 2;
 var LAYER_OBJECT_ENEMIES = 3;
-var LAYER_OBJECT_TRIGGERS = 4;
-var LAYER_OBJECT_SPEEDBOOSTS = 5;
+var LAYER_OBJECT_SPEEDBOOSTS = 4;
+var LAYER_OBJECT_TRIGGERS = 5;
+var LAYER_OBJECT_ENEMIES2 = 6;
+var LAYER_OBJECT_SPEEDPENALTIES = 7;
+var LAYER_OBJECT_POGOSTICKS = 8;
 
 
 var worldOffsetX = 10;
@@ -164,7 +167,7 @@ function initialize()
 			if(level1.layers[LAYER_OBJECT_ENEMIES].data[idx] != 0) 
 			{
 				var px = tileToPixel(x);
-				var py = tileToPixel(y + 1.1);
+				var py = tileToPixel(y);
 				enemies.push(new Enemy(px, py));
 			}
 			idx++;
@@ -172,11 +175,11 @@ function initialize()
 	} 
 	
 	idx = 0;
-	for(var y = 1; y < level1.layers[LAYER_OBJECT_TRIGGERS].height; y++) 
+	for(var y = 1; y < level1.layers[LAYER_OBJECT_SPEEDBOOSTS].height; y++) 
 	{
-		for(var x = 0; x < level1.layers[LAYER_OBJECT_TRIGGERS].width; x++) 
+		for(var x = 0; x < level1.layers[LAYER_OBJECT_SPEEDBOOSTS].width; x++) 
 		{
-			if(level1.layers[LAYER_OBJECT_TRIGGERS].data[idx] != 0) 
+			if(level1.layers[LAYER_OBJECT_SPEEDBOOSTS].data[idx] != 0) 
 			{
 				var px = tileToPixel(x);
 				var py = tileToPixel(y);
@@ -186,7 +189,7 @@ function initialize()
 		}
 	} 
 	
-	/*idx = 0;
+	idx = 0;
 	for(var y = 1; y < level1.layers[LAYER_OBJECT_ENEMIES2].height; y++)
 	{
 		for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMIES2].width; x++)
@@ -199,7 +202,7 @@ function initialize()
 			}
 			idx++;
 		}
-	}*/
+	}
 	
 	cells[LAYER_OBJECT_TRIGGERS] = [];
 	idx = 0;
@@ -220,6 +223,37 @@ function initialize()
 			idx++;
 		}
 	}
+
+	idx = 0;
+	for(var y = 1; y < level1.layers[LAYER_OBJECT_SPEEDPENALTIES].height; y++) 
+	{
+		for(var x = 0; x < level1.layers[LAYER_OBJECT_SPEEDPENALTIES].width; x++) 
+		{
+			if(level1.layers[LAYER_OBJECT_SPEEDPENALTIES].data[idx] != 0) 
+			{
+				var px = tileToPixel(x);
+				var py = tileToPixel(y);
+				powerups.push(new Powerup(px, py, 1));
+			}
+			idx++;
+		}
+	} 
+	
+
+	idx = 0;
+	for(var y = 1; y < level1.layers[LAYER_OBJECT_POGOSTICKS].height; y++) 
+	{
+		for(var x = 0; x < level1.layers[LAYER_OBJECT_POGOSTICKS].width; x++) 
+		{
+			if(level1.layers[LAYER_OBJECT_POGOSTICKS].data[idx] != 0) 
+			{
+				var px = tileToPixel(x);
+				var py = tileToPixel(y);
+				powerups.push(new Powerup(px, py, 2));
+			}
+			idx++;
+		}
+	} 
 	
 	// background music
 	musicBackground = new Howl
@@ -386,8 +420,8 @@ function runSplash(deltaTime)
 function runGame(deltaTime)
 {
 	musicBackground.stop();
-	context.drawImage(background, -camera.origin.x%(background.width*3)/3, 0)
-	context.drawImage(background, -camera.origin.x%(background.width*3)/3 + background.width, 0)
+	context.drawImage(background, -camera.origin.x%(background.width*3)/3, 0);
+	context.drawImage(background, -camera.origin.x%(background.width*3)/3 + background.width, 0);
 
 	context.drawImage(logo, 500 - camera.origin.x, 100)
 	
@@ -423,9 +457,15 @@ function runGame(deltaTime)
 
 					break;
 					case 1:
+						player.timer = 7.5;
+						
+						player.playerState = 4; 
 					
 					break;
 					case 2:
+						player.timer = 5;
+						
+						player.playerState = 8;
 					
 					break;
 					

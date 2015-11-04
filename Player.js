@@ -3,8 +3,9 @@ var ANIM_IDLE_RIGHT = 1;
 var ANIM_DEATH_RIGHT = 2;
 var ANIM_JUMP_RIGHT = 3;
 var ANIM_IDLE_LARGE = 4;
+var ANIM_POGOSTICK = 5;
 
-var ANIM_MAX = 5;
+var ANIM_MAX = 6;
 
 var RUN = 1;
 var DEAD = 2;
@@ -24,6 +25,8 @@ var Player = function()
 
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1, [0]);
 	this.sprite.buildAnimation(2, 4, 90, 96, 0.25,[4, 5, 6, 7]);
+	this.sprite.buildAnimation(5, 5, 36, 96, 0.25,[20]);
+
 	
 	for(var i=0; i<ANIM_MAX; i++)
 	{
@@ -78,7 +81,7 @@ Player.prototype.update = function(deltaTime)
 			this.sprite.setAnimation(ANIM_DEATH_RIGHT);
 			
 			this.speed = 0;
-			this.movement(deltaTime, 0, MAXDY);
+			this.movement(deltaTime, 0, MAXDY/8);
 			this.sprite.update(deltaTime);
 			
 			
@@ -116,7 +119,19 @@ Player.prototype.update = function(deltaTime)
 			
 			this.animations(deltaTime);
 			this.movement(deltaTime, MAXDX, MAXDY);
+		break;
+		
+		case CONTINOUS_JUMPING:
+			this.speed = 1;
+			this.right = true;
+			this.sprite.update(deltaTime);
+
+			camera.updateCamera(deltaTime, 1);
 			
+			this.animations(deltaTime);
+			this.sprite.setAnimation(ANIM_POGOSTICK);
+			this.movement(deltaTime, MAXDX, MAXDY * 1.5);
+
 			
 	}
 }
@@ -142,6 +157,10 @@ Player.prototype.animations = function(deltaTime)
 	this.left = false;
 	this.right = false;
 	this.jump = false;
+
+	if (this.playerState == CONTINOUS_JUMPING && !this.jumping && !this.falling)
+		this.jump = true;
+	
 	if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping && !this.dead)
 	{
 		this.sprite.setAnimation(ANIM_WALK_RIGHT);
@@ -215,6 +234,8 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -MAXDX * this.speed, MAXDX * this.speed);
 	this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
 	
+	this.collision();
+	
 		// calculate the new position and velocity:
 	this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
 	this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
@@ -227,6 +248,7 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 		// clamp at zero to prevent friction from making us jiggle side to side
 		this.velocity.x = 0;
 	}
+	this.collision();
 
 	
 	// we’ll insert code here later
@@ -238,80 +260,7 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	// This means we can short-circuit and avoid building a general purpose
 	// collision detection engine by simply looking at the 1 to 4 cells that
 	// the player occupies:
-	var tx = pixelToTile(this.position.x);
-	var ty = bound(pixelToTile(this.position.y), 1, 30);
-	var nx = (this.position.x)%TILE; // true if player overlaps right
-	var ny = (this.position.y)%TILE; // true if player overlaps below
-	var cell = cellAtTileCoord(LAYER_PLATFORMS, tx, ty);
-	var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
-	var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);
-	var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty + 1);
 	
-	if (this.velocity.x > 0)
-	{
-		musicBackground.play();
-	}
-	
-	
-	
-	// If the player has vertical velocity, then check to see if they have hit a platform
-	// below or above, in which case, stop their vertical velocity, and clamp their
-	// y position:
-	if (this.velocity.y > 0) 
-	{
-		if ((celldown && !cell) || (celldiag && !cellright && nx)) 
-		{
-			// clamp the y position to avoid falling into platform below
-			this.position.y = tileToPixel(ty);
-			this.velocity.y = 0; // stop downward velocity
-			this.falling = false; // no longer falling
-			this.jumping = false; // (or jumping)
-			ny = 0; // no longer overlaps the cells below
-		}
-	}
-	
-	else if (this.velocity.y < 0) 
-	{
-		if ((cell && !celldown) || (cellright && !celldiag && nx)) 
-		{
-			// clamp the y position to avoid jumping into platform above
-			this.position.y = tileToPixel(ty + 1);
-			this.velocity.y = 0; // stop upward velocity
-			// player is no longer really in that cell, we clamped them to the cell below
-			cell = celldown;
-			cellright = celldiag; // (ditto)
-			ny = 0; // player no longer overlaps the cells below
-		}
-	}
-
-	if (this.velocity.x > 0) 
-	{
-		if ((cellright && !cell) || (celldiag && !celldown && ny)) 
-		{
-			// clamp the x position to avoid moving into the platform we just hit
-			this.position.x = tileToPixel(tx);
-			this.velocity.x = 0; // stop horizontal velocity
-			if (this.sprite.currentAnimation != ANIM_IDLE_RIGHT)
-			{
-				this.sprite.setAnimation(ANIM_IDLE_RIGHT);
-			}
-		}
-	}
-	else if (this.velocity.x < 0) 
-	{
-		if ((cell && !cellright) || (celldown && !celldiag && ny)) 
-		{
-			// clamp the x position to avoid moving into the platform we just hit
-			this.position.x = tileToPixel(tx + 1);
-			this.velocity.x = 0; // stop horizontal velocity
-		}
-	}
-	
-	
-	if(cellAtTileCoord(LAYER_OBJECT_TRIGGERS, tx, ty) == true && !this.dead)
-	{
-		this.kill();
-	}
 
 	
 	
@@ -372,6 +321,77 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 
 	}
 	
+}
+
+Player.prototype.collision = function()
+{
+	var tx = pixelToTile(this.position.x);
+	var ty = bound(pixelToTile(this.position.y), 1, 30);
+	var nx = (this.position.x)%TILE; // true if player overlaps right
+	var ny = (this.position.y)%TILE; // true if player overlaps below
+	var cell = cellAtTileCoord(LAYER_PLATFORMS, tx, ty);
+	var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
+	var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);
+	var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty + 1);
+	
+	// If the player has vertical velocity, then check to see if they have hit a platform
+	// below or above, in which case, stop their vertical velocity, and clamp their
+	// y position:
+	if (this.velocity.y > 0) 
+	{
+		if ((celldown && !cell) || (celldiag && !cellright && nx)) 
+		{
+			// clamp the y position to avoid falling into platform below
+			this.position.y = tileToPixel(ty);
+			this.velocity.y = 0; // stop downward velocity
+			this.falling = false; // no longer falling
+			this.jumping = false; // (or jumping)
+			ny = 0; // no longer overlaps the cells below
+		}
+	}
+	
+	else if (this.velocity.y < 0) 
+	{
+		if ((cell && !celldown) || (cellright && !celldiag && nx)) 
+		{
+			// clamp the y position to avoid jumping into platform above
+			this.position.y = tileToPixel(ty + 1);
+			this.velocity.y = 0; // stop upward velocity
+			// player is no longer really in that cell, we clamped them to the cell below
+			cell = celldown;
+			cellright = celldiag; // (ditto)
+			ny = 0; // player no longer overlaps the cells below
+		}
+	}
+
+	if (this.velocity.x > 0) 
+	{
+		if ((cellright && !cell) || (celldiag && !celldown && ny)) 
+		{
+			// clamp the x position to avoid moving into the platform we just hit
+			this.position.x = tileToPixel(tx);
+			this.velocity.x = 0; // stop horizontal velocity
+			if (this.sprite.currentAnimation != ANIM_IDLE_RIGHT)
+			{
+				this.sprite.setAnimation(ANIM_IDLE_RIGHT);
+			}
+		}
+	}
+	else if (this.velocity.x < 0) 
+	{
+		if ((cell && !cellright) || (celldown && !celldiag && ny)) 
+		{
+			// clamp the x position to avoid moving into the platform we just hit
+			this.position.x = tileToPixel(tx + 1);
+			this.velocity.x = 0; // stop horizontal velocity
+		}
+	}
+	
+	
+	if(cellAtTileCoord(LAYER_OBJECT_TRIGGERS, tx, ty) == true && !this.dead)
+	{
+		this.kill();
+	}
 }
 
 Player.prototype.kill = function()
