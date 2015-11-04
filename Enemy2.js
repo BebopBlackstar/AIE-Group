@@ -22,7 +22,7 @@ var Enemy2 = function(x, y)
 	this.moveRight = true;
 	this.pause = 0;
 	
-	this.width = 64;
+	this.width = 32;
 	this.height = 64;
 }
 

@@ -311,9 +311,9 @@ function intersects(o1, o2)
 	if(o2.position.y + o2.height/2 < o1.position.y - o1.height/2 || o2.position.x + o2.width/2 < o1.position.x - o1.width/2 ||	o2.position.x - o2.width/2 > o1.position.x + o1.width/2 || o2.position.y - o2.height/2 > o1.position.y + o1.height/2)
 	{
 		//draws collision squares for testing
-		//context.fillRect(o2.position.x - o2.width/2 - camera.worldOffsetX, o2.position.y - o2.height, o2.width, o2.height)
+		context.fillRect(o2.position.x - o2.width/2 - camera.worldOffsetX, o2.position.y - o2.height, o2.width, o2.height)
 		
-		//context.fillRect(o1.position.x - o1.width/2 - camera.worldOffsetX, o1.position.y - o1.height, o1.width, o1.height)
+		context.fillRect(o1.position.x - o1.width/2 - camera.worldOffsetX, o1.position.y - o1.height, o1.width, o1.height)
 		return false;
 	}
 	return true;
@@ -470,7 +470,7 @@ function runGame(deltaTime)
 					break;
 				}
 			powerups.splice(i, 1);
-			
+			sfxPowerdown.play();
 		}
 	}
 	
@@ -577,20 +577,6 @@ function run()
 }
 
 initialize();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
