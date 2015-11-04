@@ -142,18 +142,22 @@ Player.prototype.update = function(deltaTime)
 			
 
 	}
-	//if (this.playerState != RUN)
+	camera.generateMap(deltaTime);
+
+	if (this.playerState != RUN)
 	{
 		this.totalTime = this.totalTime + deltaTime*5;
 
-		fireEmitter.position.y = this.position.y + (20*(Math.cos(this.totalTime*3)));
-		fireEmitter.position.x = this.position.x - camera.worldOffsetX + (20*(Math.sin(this.totalTime*3)));
+		fireEmitter.position.y = this.position.y - this.height/2 + (20*(Math.cos(this.totalTime*3)));
+		fireEmitter.position.x = this.position.x + (20*(Math.sin(this.totalTime*3)));
 		fireEmitter.update(deltaTime);
 
 		
-		//fireEmitter.draw();
+		fireEmitter.draw();
 
 	}
+	else 
+	fireEmitter.particles.splice(0, fireEmitter.particles.length)
 }
 
 

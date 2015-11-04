@@ -128,7 +128,14 @@ tileset.src = "tileset.png";
 var background = document.createElement("img");
 background.src = "caveedited.png";
 
-var fireEmitter = createFireEmitter("sparkle.png", (SCREEN_WIDTH/4)*3, SCREEN_HEIGHT-100);
+var fireEmitter = createFireEmitter("sparkle2.png", (SCREEN_WIDTH/4)*3, SCREEN_HEIGHT-100);
+fireEmitter.minSize = 2;
+fireEmitter.maxSize = 10;
+fireEmitter.minVelocity.set(-5, -5);
+fireEmitter.maxVelocity.set(5, 5);
+fireEmitter.minLife = 0.1;
+fireEmitter.maxLife = 1;
+
 
 
 // background music
@@ -476,7 +483,6 @@ function runGame(deltaTime)
 	{
 		player.update(deltaTime);
 	}
-	camera.generateMap(deltaTime);
 	
 	for (var i = 0; i < enemies.length; i++)
 	{

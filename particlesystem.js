@@ -98,7 +98,7 @@ Emitter.prototype.draw = function()
 		context.globalAlpha = p.alpha*3;
 		context.fillStyle = '#ffff00';
 		this.texture.fillStyle = '#ffff00';
-		context.drawImage(this.texture, origin.x * scale.x, origin.y * scale.y, p.size.x, p.size.y);
+		context.drawImage(this.texture, origin.x * scale.x - camera.worldOffsetX , origin.y * scale.y, p.size.x, p.size.y);
 		context.restore();		
 	}
 }
