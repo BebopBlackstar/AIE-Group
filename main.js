@@ -150,7 +150,7 @@ musicBackground = new Howl(
 
 runningBackground = new Howl(
 	{
-		urls: ["run.wav"],
+		urls: ["run.mp3"],
 		loop: false,
 		buffer: true,
 		volume: 0.3
@@ -160,7 +160,7 @@ runningBackground = new Howl(
 
 sfxJump = new Howl(
 {
-	urls: ["jump.wav"],
+	urls: ["jump.mp3"],
 	buffer: true,
 	volume: 1,
 	onend: function() 
@@ -171,7 +171,7 @@ sfxJump = new Howl(
 
 sfxDeath = new Howl(
 {
-	urls: ["death.wav"],
+	urls: ["death.mp3"],
 	buffer: true,
 	volume: 1,
 	onend: function()
@@ -182,7 +182,7 @@ sfxDeath = new Howl(
 
 sfxPowerup = new Howl(
 {
-	urls: ["powerup.wav"],
+	urls: ["powerup.mp3"],
 	buffer: true,
 	volume: 1,
 	onend: function()
@@ -193,7 +193,7 @@ sfxPowerup = new Howl(
 
 sfxPowerdown = new Howl(
 {
-	urls: ["powerdown.wav"],
+	urls: ["powerdown.mp3"],
 	buffer: true,
 	volume: 1,
 	onend: function()
@@ -253,24 +253,6 @@ function initialize()
 					break;
 				}
 				
-				
-				//enemies.push(new Enemy(px, py));
-				
-				var type = rand(0, 2);
-				
-				switch(type)
-				{
-					case 0:
-					enemies.push(new Enemy(px, py));
-					break;
-					
-					case 1:
-					enemies.push(new Enemy2(px, py));
-					break;
-				}
-				
-				
-				//enemies.push(new Enemy(px, py));
 			}
 			idx++;
 		}
@@ -435,8 +417,6 @@ function drawMap(deltaTime)
 // menu/splash function. runs every frame.
 function runSplash(deltaTime)
 {
-	
-	//musicBackground.play();
 	runningBackground.stop();
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
 	{

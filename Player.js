@@ -114,6 +114,11 @@ Player.prototype.update = function(deltaTime)
 			this.animations(deltaTime);
 			this.movement(deltaTime, MAXDX * 2, MAXDY);
 			
+			if (this.timer < 0)
+			{
+				sfxPowerdown.play();
+			}
+			
 		break;
 		
 		
