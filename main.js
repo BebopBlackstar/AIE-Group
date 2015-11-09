@@ -143,8 +143,6 @@ var fireEmitter = createFireEmitter("sparkle2.png", (SCREEN_WIDTH/4)*3, SCREEN_H
 
 
 
-
-
 var cells = []; // the array that holds our simplified collision data
 function initialize() 
 {
@@ -196,24 +194,6 @@ function initialize()
 					break;
 				}
 				
-				
-				//enemies.push(new Enemy(px, py));
-				
-				var type = rand(0, 2);
-				
-				switch(type)
-				{
-					case 0:
-					enemies.push(new Enemy(px, py));
-					break;
-					
-					case 1:
-					enemies.push(new Enemy2(px, py));
-					break;
-				}
-				
-				
-				//enemies.push(new Enemy(px, py));
 			}
 			idx++;
 		}
@@ -442,8 +422,6 @@ function drawMap(deltaTime)
 // menu/splash function. runs every frame.
 function runSplash(deltaTime)
 {
-	
-	//musicBackground.play();
 	runningBackground.stop();
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
 	{
