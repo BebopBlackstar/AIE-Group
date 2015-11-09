@@ -96,7 +96,7 @@ Player.prototype.update = function(deltaTime)
 			this.sprite.setAnimation(ANIM_DEATH_RIGHT);
 			
 			this.speed = 0;
-			this.movement(deltaTime, 0, MAXDY/8);
+			this.movement(deltaTime, 0, MAXDY/8, GRAVITY);
 			this.sprite.update(deltaTime);
 			
 			
@@ -109,7 +109,7 @@ Player.prototype.update = function(deltaTime)
 			this.sprite.update(deltaTime);
 			camera.updateCamera(deltaTime, 1);
 			this.animations(deltaTime);
-			this.movement(deltaTime, MAXDX, MAXDY);
+			this.movement(deltaTime, MAXDX, MAXDY, GRAVITY);
 		break;
 		
 		case SPEED_BOOST:
@@ -119,7 +119,7 @@ Player.prototype.update = function(deltaTime)
 			camera.updateCamera(deltaTime, 1);
 			
 			this.animationsSpeedBoost(deltaTime);
-			this.movement(deltaTime, MAXDX * 2, MAXDY);
+			this.movement(deltaTime, MAXDX * 2, MAXDY, GRAVITY);
 			
 			if (this.timer < 0)
 			{
@@ -137,7 +137,7 @@ Player.prototype.update = function(deltaTime)
 
 			
 			this.animations(deltaTime);
-			this.movement(deltaTime, MAXDX, MAXDY);
+			this.movement(deltaTime, MAXDX, MAXDY, GRAVITY);
 		break;	
 		
 		case POGOSTICK:
@@ -149,15 +149,17 @@ Player.prototype.update = function(deltaTime)
 			
 			this.animations(deltaTime);
 			this.sprite.setAnimation(ANIM_POGOSTICK);
-			this.movement(deltaTime, MAXDX, MAXDY * 1.5);
+			this.movement(deltaTime, MAXDX, MAXDY * 1.5, GRAVITY);
 		break;
 		
 		case LESS_GRAVITY:
 			this.speed = 1;
 			this.right = true;
+			camera.updateCamera(deltaTime, 1);
+
 			this.sprite.update(deltaTime);
 			this.animations(deltaTime);
-			this.movement(deltaTime, MAXDX, MAXDY*3);
+			this.movement(deltaTime, MAXDX, MAXDY * 1.25, GRAVITY/2);
 		break;
 			
 
@@ -241,7 +243,7 @@ Player.prototype.animationsSpeedBoost = function(deltaTime)
 
 
 
-Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
+Player.prototype.movement = function(deltaTime, MAXDX, MAXDY, GRAVITY)
 {
 	this.jump = false;
 	if (keyboard.isKeyDown(keyboard.KEY_SPACE) == true && !this.falling && !this.jumping && this.dead == false)
@@ -460,26 +462,31 @@ Player.prototype.cheats = function()
 	}
 	if (keyboard.isKeyDown(keyboard.KEY_5) == true)
 	{
-		this.position.y = 432;
-		this.position.x = 11186;
+		
+		this.position.y = 336;
+		this.position.x = 10736;
 		camera.origin.x = this.position.x - 500;
 	}
 	
 	// hack to shortcut to end of level
 	if (keyboard.isKeyDown(keyboard.KEY_6) == true)
 	{
-		this.playerState = POGOSTICK;
-		this.timer = 0.24;
+		this.position.y = 400;
+		this.position.x = 12000;
+		camera.origin.x = this.position.x - 500;
+		//this.playerState = POGOSTICK;
+		//this.timer = 0.24;
 	}
 	if (keyboard.isKeyDown(keyboard.KEY_7) == true)
 	{
-		this.timer = 5;
-		this.playerState = SPEED_BOOST;
+		this.position.y = 400;
+		this.position.x = 12000;
+		camera.origin.x = this.position.x - 500;
 	}
 	if (keyboard.isKeyDown(keyboard.KEY_8) == true)
 	{
 		this.timer = 5;
-		this.playerState = SPEED_SLOW;
+		this.playerState = LESS_GRAVITY;
 	}
 	
 	if (keyboard.isKeyDown(keyboard.KEY_9) == true)

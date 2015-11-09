@@ -1,12 +1,11 @@
 var Powerup = function(x, y, type)
 {
-	this.height = 50;
-	this.width = 50; 
+
 	this.type = 0;
 	this.type = type;
 	
-	this.width = 32;
-	this.height = 32;
+	this.width = 16;
+	this.height = 16;
 	
 	this.position = new Vector2();
 	this.position.set(x + 8, y);
@@ -32,11 +31,13 @@ var Powerup = function(x, y, type)
 			//POGOSTICK / CONTINOUS JUMPING
 			this.image.src = "images/pogostick.png"
 			this.width = 16;
-			this.height = 36
+			this.height = 36;
 		
 		break;
 		
 		case 3:
+			// LESS GRAVITY
+			this.image.src = "images/waterpotion.png"
 		
 		break;
 	}
