@@ -20,7 +20,9 @@ var Powerup = function(x, y, type)
 	{
 		case 0:
 			//SPEED  BOOST 
-			this.image.src = "firepotion.png";
+			this.image.src = "shoe.png";
+			this.height = 32;
+			this.width = 32;
 		break;
 		case 1:
 			//SLOW SPEED

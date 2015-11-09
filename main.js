@@ -86,6 +86,9 @@ var STATE_GAMEOVER = 2;
 
 var gameState = STATE_SPLASH;
 
+var muteMusic = false;
+var muteSounds = false;
+
 var runningBackground;
 var musicBackground;
 var sfxJump;
@@ -111,6 +114,8 @@ var powerups = [];
 var enemies2 = [];
 var camera = new Camera();
 
+var VOLUME = 0;
+
 // loading of images
 
 var logo = document.createElement("img");
@@ -129,78 +134,16 @@ var background = document.createElement("img");
 background.src = "caveedited.png";
 
 var fireEmitter = createFireEmitter("sparkle2.png", (SCREEN_WIDTH/4)*3, SCREEN_HEIGHT-100);
-fireEmitter.minSize = 2;
-fireEmitter.maxSize = 10;
-fireEmitter.minVelocity.set(-5, -5);
-fireEmitter.maxVelocity.set(5, 5);
-fireEmitter.minLife = 0.1;
-fireEmitter.maxLife = 1;
+	fireEmitter.minSize = 2;
+	fireEmitter.maxSize = 10;
+	fireEmitter.minVelocity.set(-5, -5);
+	fireEmitter.maxVelocity.set(5, 5);
+	fireEmitter.minLife = 0.1;
+	fireEmitter.maxLife = 1;
 
 
 
-// background music
-musicBackground = new Howl(
-	{
-		urls: ["spookyscaryskeletons.mp3"],
-		loop: true,
-		buffer: true,
-		volume: 1
-	}
-)
 
-runningBackground = new Howl(
-	{
-		urls: ["run.wav"],
-		loop: false,
-		buffer: true,
-		volume: 0.3
-	} 
-);
-
-
-sfxJump = new Howl(
-{
-	urls: ["jump.wav"],
-	buffer: true,
-	volume: 1,
-	onend: function() 
-	{
-		isSfxPlaying = false;
-	}
-});
-
-sfxDeath = new Howl(
-{
-	urls: ["death.wav"],
-	buffer: true,
-	volume: 1,
-	onend: function()
-	{
-		isSfxPlaying = false;
-	}
-});
-
-sfxPowerup = new Howl(
-{
-	urls: ["powerup.wav"],
-	buffer: true,
-	volume: 1,
-	onend: function()
-	{
-		isSfxPlaying = false;
-	}
-});
-
-sfxPowerdown = new Howl(
-{
-	urls: ["powerdown.wav"],
-	buffer: true,
-	volume: 1,
-	onend: function()
-	{
-		isSfxPlaying = false;
-	}
-});
 
 var cells = []; // the array that holds our simplified collision data
 function initialize() 
@@ -356,6 +299,70 @@ function initialize()
 			idx++;
 		}
 	} 
+	
+	// background music
+	musicBackground = new Howl(
+		{
+			urls: ["spookyscaryskeletons.mp3"],
+			loop: true,
+			buffer: true,
+			volume: 1 * VOLUME
+		}
+	)
+
+	runningBackground = new Howl(
+		{
+			urls: ["run.wav"],
+			loop: false,
+			buffer: true,
+			volume: 0.3 * VOLUME
+		} 
+	);
+
+
+	sfxJump = new Howl(
+	{
+		urls: ["jump.wav"],
+		buffer: true,
+		volume: 1 * VOLUME,
+		onend: function() 
+		{
+			isSfxPlaying = false;
+		}
+	});
+
+	sfxDeath = new Howl(
+	{
+		urls: ["death.wav"],
+		buffer: true,
+		volume: 1 * VOLUME,
+		onend: function()
+		{
+			isSfxPlaying = false;
+		}
+	});
+
+	sfxPowerup = new Howl(
+	{
+		urls: ["powerup.wav"],
+		buffer: true,
+		volume: 1 * VOLUME,
+		onend: function()
+		{
+			isSfxPlaying = false;
+		}
+	});
+
+	sfxPowerdown = new Howl(
+	{
+		urls: ["powerdown.wav"],
+		buffer: true,
+		volume: 1 * VOLUME,
+		onend: function()
+		{
+			isSfxPlaying = false;
+		}
+	});
 }
 
 function intersects(o1, o2)
@@ -477,7 +484,6 @@ function runGame(deltaTime)
 
 	context.drawImage(logo, 500 - camera.origin.x, 100)
 	
-	//musicBackground.play();
 	
 	if(keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) != true)
 	{
@@ -500,29 +506,28 @@ function runGame(deltaTime)
 		if (intersects(player, powerups[i]))
 		{
 			sfxPowerup.play();
-			if (player.timer < 0)
-				switch (powerups[i].type)
-				{
-					case 0: 
-						player.timer = 5;
-						
-						player.playerState = 3;
+			switch (powerups[i].type)
+			{
+				case 0: 
+					player.timer = 5;
 					
+					player.playerState = 3;
+				
 
-					break;
-					case 1:
+				break;
+				case 1:
 					player.timer = 7.5;
-						
-						player.playerState = 4; 
 					
-					break;
-					case 2:
-						player.timer = 5;
-						
-						player.playerState = 8;
+					player.playerState = 4; 
+				
+				break;
+				case 2:
+					player.timer = 5;
 					
-					break;
-				}
+					player.playerState = 8;
+				
+				break;
+			}
 			powerups.splice(i, 1);
 			//sfxPowerdown.play();
 		}

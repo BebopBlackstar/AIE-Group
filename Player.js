@@ -4,8 +4,11 @@ var ANIM_DEATH_RIGHT = 2;
 var ANIM_JUMP_RIGHT = 3;
 var ANIM_IDLE_LARGE = 4;
 var ANIM_POGOSTICK = 5;
+var ANIM_SPEEDBOOST = 6;
+var ANIM_SPEED_IDLE = 7;
+var ANIM_SPEED_JUMP = 8;
 
-var ANIM_MAX = 6;
+var ANIM_MAX = 9;
 
 var RUN = 1;
 var DEAD = 2;
@@ -14,13 +17,14 @@ var SPEED_SLOW = 4;
 var JUMP_BOOST = 5;
 var JUMP_PENALTY = 6;
 var STUCK_RUNNING = 7;
-var CONTINOUS_JUMPING = 8;
+var POGOSTICK = 8;
+var LESS_GRAVITY = 9;
 
 
 
 var Player = function() 
 {
-	this.sprite = new Sprite("skeleton.png");
+	this.sprite = new Sprite("skeletonTEMP.png");
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[11, 12, 13, 14]);
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.25,[15, 16, 17, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19]);
@@ -28,6 +32,10 @@ var Player = function()
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1, [0]);
 	this.sprite.buildAnimation(2, 4, 90, 96, 0.25,[4, 5, 6, 7]);
 	this.sprite.buildAnimation(5, 5, 36, 96, 0.25,[20]);
+	this.sprite.buildAnimation(5, 4, 36, 96, 0.075,[25, 26, 27, 28, 29, 30, 31, 32, 33, 34]);
+	this.sprite.buildAnimation(5, 4, 36, 96, 0.075,[25, 26, 27, 28, 29, 30, 31, 32, 33, 34]);
+	this.sprite.buildAnimation(5, 4, 36, 96, 0.075,[25, 26, 27, 28, 29, 30, 31, 32, 33, 34]);
+
 	
 	for(var i=0; i<ANIM_MAX; i++)
 	{
@@ -38,8 +46,8 @@ var Player = function()
 	this.width = 36;
 	this.height = 48;
 	
-	this.position = new Vector2(10, 350);
-	this.position.set(100, 400);
+	this.position = new Vector2(0, 0);
+	this.position.set(100, 300);
 	
 	this.velocity = new Vector2(0, 5);
 
@@ -109,8 +117,10 @@ Player.prototype.update = function(deltaTime)
 			this.right = true;
 			this.sprite.update(deltaTime);
 			camera.updateCamera(deltaTime, 1);
-
 			
+
+			if (this.sprite.currentAnimation != ANIM_SPEEDBOOST)
+				this.sprite. setAnimation(ANIM_SPEEDBOOST);
 			this.animations(deltaTime);
 			this.movement(deltaTime, MAXDX * 2, MAXDY);
 			
@@ -128,7 +138,7 @@ Player.prototype.update = function(deltaTime)
 			this.movement(deltaTime, MAXDX, MAXDY);
 		break;	
 		
-		case CONTINOUS_JUMPING:
+		case POGOSTICK:
 			this.speed = 1;
 			this.right = true;
 			this.sprite.update(deltaTime);
@@ -139,12 +149,18 @@ Player.prototype.update = function(deltaTime)
 			this.sprite.setAnimation(ANIM_POGOSTICK);
 			this.movement(deltaTime, MAXDX, MAXDY * 1.5);
 		break;
+		
+		case LESS_GRAVITY:
+			this.speed = 0.5;
+			this.right = true;
+			this.sprite.update(deltaTime);
+		break;
 			
 
 	}
 	camera.generateMap(deltaTime);
 
-	if (this.playerState != RUN)
+	if (this.playerState != RUN && this.playerState != DEAD)
 	{
 		this.totalTime = this.totalTime + deltaTime*5;
 
@@ -167,10 +183,10 @@ Player.prototype.animations = function(deltaTime)
 	this.right = false;
 	this.jump = false;
 	
-	if (this.playerState == CONTINOUS_JUMPING && !this.jumping && !this.falling)
+	if (this.playerState == POGOSTICK && !this.jumping && !this.falling)
 		this.jump = true;
 	
-	if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping && !this.dead)
+	if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping && !this.dead && this.playerState != SPEED_BOOST)
 	{
 		this.sprite.setAnimation(ANIM_WALK_RIGHT);
 	}
@@ -193,7 +209,7 @@ Player.prototype.animations = function(deltaTime)
 		}
 	}
 	
-	else if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping && !this.dead)
+	else if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping && !this.dead && this.playerState != SPEED_BOOST)
 	{
 		this.sprite.setAnimation(ANIM_WALK_RIGHT);
 	}
@@ -259,77 +275,16 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	}
 		this.collision();
 	
-	// we’ll insert code here later
-	// collision detection
-	// Our collision detection logic is greatly simplified by the fact that the
-	// player is a rectangle and is exactly the same size as a single tile.
-	 // So we know that the player can only ever occupy 1, 2 or 4 cells.
-
-	// This means we can short-circuit and avoid building a general purpose
-	// collision detection engine by simply looking at the 1 to 4 cells that
-	// the player occupies:
+	this.cheats();
 
 
 	
 	
-	// Hacks and "Checkpoints"
-	if (keyboard.isKeyDown(keyboard.KEY_0) == true)
-	{
-		this.position.y = -200;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_1) == true)
-	{
-		//"Put a breakpoint here to freeze the game at will"
-		var freezethegamehere = 1;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_2) == true)
-	{
-		this.position.y = 432;
-		this.position.x = 5280;
-		camera.origin.x = 5296 - 500;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_3) == true)
-	{
-		this.position.y = 432;
-		this.position.x = 7834;
-		camera.origin.x = 7834 - 500;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_4) == true)
-	{
-		this.position.y = 432;
-		this.position.x = 8600;
-		camera.origin.x = 8600 - 500;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_5) == true)
-	{
-		this.position.y = 432;
-		this.position.x = 11186;
-		camera.origin.x = this.position.x - 500;
-	}
-	
-	// hack to shortcut to end of level
-	if (keyboard.isKeyDown(keyboard.KEY_6) == true)
-	{
-		this.playerState = RUN;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_7) == true)
-	{
-		this.timer = 5;
-		this.playerState = SPEED_BOOST;
-	}
-	if (keyboard.isKeyDown(keyboard.KEY_8) == true)
-	{
-		this.timer = 5;
-		this.playerState = SPEED_SLOW;
-	}
-	
-	if (keyboard.isKeyDown(keyboard.KEY_9) == true)
-	{
-		this.kill();
 
-	}
 	
 }
+
+
 
 Player.prototype.collision = function()
 {
@@ -427,11 +382,67 @@ Player.prototype.kill = function()
 	}
 }
 
-	
-
-
-
 Player.prototype.draw = function()
 {
 	this.sprite.draw(context, this.position.x - this.width/2 - camera.worldOffsetX , this.position.y - this.height);
+}
+
+Player.prototype.cheats = function()
+{
+	// Hacks and "Checkpoints"
+	if (keyboard.isKeyDown(keyboard.KEY_0) == true)
+	{
+		this.position.y = -200;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_1) == true)
+	{
+		//"Put a breakpoint here to freeze the game at will"
+		var freezethegamehere = 1;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_2) == true)
+	{
+		this.position.y = 432;
+		this.position.x = 5280;
+		camera.origin.x = 5296 - 500;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_3) == true)
+	{
+		this.position.y = 432;
+		this.position.x = 7834;
+		camera.origin.x = 7834 - 500;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_4) == true)
+	{
+		this.position.y = 432;
+		this.position.x = 8600;
+		camera.origin.x = 8600 - 500;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_5) == true)
+	{
+		this.position.y = 432;
+		this.position.x = 11186;
+		camera.origin.x = this.position.x - 500;
+	}
+	
+	// hack to shortcut to end of level
+	if (keyboard.isKeyDown(keyboard.KEY_6) == true)
+	{
+		this.playerState = RUN;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_7) == true)
+	{
+		this.timer = 5;
+		this.playerState = SPEED_BOOST;
+	}
+	if (keyboard.isKeyDown(keyboard.KEY_8) == true)
+	{
+		this.timer = 5;
+		this.playerState = SPEED_SLOW;
+	}
+	
+	if (keyboard.isKeyDown(keyboard.KEY_9) == true)
+	{
+		this.kill();
+
+	}
 }
