@@ -24,7 +24,7 @@ var LESS_GRAVITY = 9;
 
 var Player = function() 
 {
-	this.sprite = new Sprite("skeletonTEMP.png");
+	this.sprite = new Sprite("images/skeletonTEMP.png");
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.1,[11, 12, 13, 14]);
 	this.sprite.buildAnimation(5, 4, 36, 48, 0.25,[15, 16, 17, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19]);
@@ -33,8 +33,8 @@ var Player = function()
 	this.sprite.buildAnimation(2, 4, 90, 96, 0.25,[4, 5, 6, 7]);
 	this.sprite.buildAnimation(5, 5, 36, 96, 0.25,[20]);
 	this.sprite.buildAnimation(5, 4, 36, 96, 0.075,[25, 26, 27, 28, 29, 30, 31, 32, 33, 34]);
-	this.sprite.buildAnimation(5, 4, 36, 96, 0.075,[25, 26, 27, 28, 29, 30, 31, 32, 33, 34]);
-	this.sprite.buildAnimation(5, 4, 36, 96, 0.075,[25, 26, 27, 28, 29, 30, 31, 32, 33, 34]);
+	this.sprite.buildAnimation(5, 4, 36, 96, 0.1,[36, 37, 38, 39]);
+	this.sprite.buildAnimation(5, 4, 36, 48, 0.075,[70]);
 
 	
 	for(var i=0; i<ANIM_MAX; i++)
@@ -118,10 +118,7 @@ Player.prototype.update = function(deltaTime)
 			this.sprite.update(deltaTime);
 			camera.updateCamera(deltaTime, 1);
 			
-
-			if (this.sprite.currentAnimation != ANIM_SPEEDBOOST)
-				this.sprite. setAnimation(ANIM_SPEEDBOOST);
-			this.animations(deltaTime);
+			this.animationsSpeedBoost(deltaTime);
 			this.movement(deltaTime, MAXDX * 2, MAXDY);
 			
 			if (this.timer < 0)
@@ -156,9 +153,11 @@ Player.prototype.update = function(deltaTime)
 		break;
 		
 		case LESS_GRAVITY:
-			this.speed = 0.5;
+			this.speed = 1;
 			this.right = true;
 			this.sprite.update(deltaTime);
+			this.animations(deltaTime);
+			this.movement(deltaTime, MAXDX, MAXDY*3);
 		break;
 			
 
@@ -184,25 +183,14 @@ Player.prototype.update = function(deltaTime)
 
 Player.prototype.animations = function(deltaTime)
 {
-	this.left = false;
-	this.right = false;
-	this.jump = false;
-	
-	if (this.playerState == POGOSTICK && !this.jumping && !this.falling)
-		this.jump = true;
-	
-	if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping && !this.dead && this.playerState != SPEED_BOOST)
-	{
-		this.sprite.setAnimation(ANIM_WALK_RIGHT);
-	}
-	if (!this.dead)
-	this.right = true
-
-	// sets animation back to walk if nothing special is happening. ie: player just jumped and no buttons pressed.
-	
 	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true && !this.falling)
 	{
 		this.speed += 0.25;
+		if (this.sprite.currentAnimation != ANIM_WALK_RIGHT)
+		{
+			this.sprite.setAnimation(ANIM_WALK_RIGHT);
+		}
+			
 	}
 
 	else if (keyboard.isKeyDown(keyboard.KEY_LEFT) == true )
@@ -214,21 +202,58 @@ Player.prototype.animations = function(deltaTime)
 		}
 	}
 	
-	else if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping && !this.dead && this.playerState != SPEED_BOOST)
+	else if (this.sprite.currentAnimation != ANIM_WALK_RIGHT  && !this.falling && !this.jumping && !this.dead)
 	{
 		this.sprite.setAnimation(ANIM_WALK_RIGHT);
 	}
 	
-	if (keyboard.isKeyDown(keyboard.KEY_SPACE) == true && !this.falling && !this.jumping && this.dead == false)
-	{
-		this.jump = true
-	}
+	
 }
+
+Player.prototype.animationsSpeedBoost = function(deltaTime)
+{
+	if (keyboard.isKeyDown(keyboard.KEY_RIGHT) == true && !this.falling)
+	{
+		this.speed += 0.25;
+		if (this.sprite.currentAnimation != ANIM_SPEEDBOOST)
+		{
+			this.sprite.setAnimation(ANIM_SPEEDBOOST);
+		}
+	}
+
+	else if (keyboard.isKeyDown(keyboard.KEY_LEFT) == true )
+	{
+		this.speed = 0;
+		if (this.sprite.currentAnimation != ANIM_SPEED_IDLE && !this.falling && !this.jumping)
+		{
+			this.sprite.setAnimation(ANIM_SPEED_IDLE)
+		}
+	}
+	
+	else if (this.sprite.currentAnimation != ANIM_SPEEDBOOST  && !this.falling && !this.jumping && !this.dead)
+	{
+		this.sprite.setAnimation(ANIM_SPEEDBOOST);
+	}
+	
+	
+}
+
 
 
 
 Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 {
+	this.jump = false;
+	if (keyboard.isKeyDown(keyboard.KEY_SPACE) == true && !this.falling && !this.jumping && this.dead == false)
+	{
+		this.jump = true
+	}
+	
+	if (this.playerState == POGOSTICK && !this.jumping && !this.falling)
+		this.jump = true;
+	
+	if (!this.dead)
+		this.right = true
 	
 	//right = true;
 	
@@ -255,7 +280,11 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 		// apply an instantaneous (large) vertical impulse
 		ddy = ddy - JUMP;
 		this.jumping = true;
+		if (this.playerState != SPEED_BOOST)
 		this.sprite.setAnimation(ANIM_JUMP_RIGHT)
+		else
+		this.sprite.setAnimation(ANIM_SPEED_JUMP)
+
 	}
 
 	// calculate the new position and velocity:
@@ -264,21 +293,21 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 	this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -MAXDX * this.speed, MAXDX * this.speed);
 	this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
 	
-	this.collision();
+	this.collisionDetection();
 	
 		// calculate the new position and velocity:
 	this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
 	this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
 	this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -MAXDX * this.speed, MAXDX * this.speed);
 	this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
-	this.score = this.position.x;
+	this.score = Math.floor(camera.origin.x/TILE);
 	if ((wasleft && (this.velocity.x > 0)) ||
 	(wasright && (this.velocity.x < 0)))
 	{
 		// clamp at zero to prevent friction from making us jiggle side to side
 		this.velocity.x = 0;
 	}
-		this.collision();
+		this.collisionDetection();
 	
 	this.cheats();
 
@@ -291,7 +320,7 @@ Player.prototype.movement = function(deltaTime, MAXDX, MAXDY)
 
 
 
-Player.prototype.collision = function()
+Player.prototype.collisionDetection = function()
 {
 		var tx = pixelToTile(this.position.x);
 	var ty = bound(pixelToTile(this.position.y), 1, 30);
@@ -346,10 +375,17 @@ Player.prototype.collision = function()
 			// clamp the x position to avoid moving into the platform we just hit
 			this.position.x = tileToPixel(tx);
 			this.velocity.x = 0; // stop horizontal velocity
-			if (this.sprite.currentAnimation != ANIM_IDLE_RIGHT)
+			if (this.playerState != SPEED_BOOST)
 			{
-				this.sprite.setAnimation(ANIM_IDLE_RIGHT);
+				if (this.sprite.currentAnimation != ANIM_IDLE_RIGHT)
+					this.sprite.setAnimation(ANIM_IDLE_RIGHT);
 			}
+			else
+			{
+				if (this.sprite.currentAnimation != ANIM_SPEED_IDLE)	
+					this.sprite.setAnimation(ANIM_SPEED_IDLE);
+			}
+			
 		}
 	}
 	else if (this.velocity.x < 0) 
@@ -432,7 +468,8 @@ Player.prototype.cheats = function()
 	// hack to shortcut to end of level
 	if (keyboard.isKeyDown(keyboard.KEY_6) == true)
 	{
-		this.playerState = RUN;
+		this.playerState = POGOSTICK;
+		this.timer = 0.24;
 	}
 	if (keyboard.isKeyDown(keyboard.KEY_7) == true)
 	{

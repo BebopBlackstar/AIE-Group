@@ -119,21 +119,21 @@ var VOLUME = 0;
 // loading of images
 
 var logo = document.createElement("img");
-logo.src ="templogo.png";
+logo.src ="images/templogo.png";
 
 var splashBG = document.createElement("img");
-splashBG.src = "Title Splash BG.png";
+splashBG.src = "images/Title Splash BG.png";
 
 var gameOverSplashBG = document.createElement("img");
-gameOverSplashBG.src = "GameOver Splash BG.png";
+gameOverSplashBG.src = "images/GameOver Splash BG.png";
 
 var tileset = document.createElement("img");
-tileset.src = "tileset.png";
+tileset.src = "images/tileset.png";
 
 var background = document.createElement("img");
-background.src = "caveedited.png";
+background.src = "images/caveedited.png";
 
-var fireEmitter = createFireEmitter("sparkle2.png", (SCREEN_WIDTH/4)*3, SCREEN_HEIGHT-100);
+var fireEmitter = createFireEmitter("images/sparkle2.png", (SCREEN_WIDTH/4)*3, SCREEN_HEIGHT-100);
 	fireEmitter.minSize = 2;
 	fireEmitter.maxSize = 10;
 	fireEmitter.minVelocity.set(-5, -5);
@@ -283,7 +283,7 @@ function initialize()
 	// background music
 	musicBackground = new Howl(
 		{
-			urls: ["spookyscaryskeletons.mp3"],
+			urls: ["sounds/spookyscaryskeletons.mp3"],
 			loop: true,
 			buffer: true,
 			volume: 1 * VOLUME
@@ -292,7 +292,7 @@ function initialize()
 
 	runningBackground = new Howl(
 		{
-			urls: ["run.wav"],
+			urls: ["sounds/run.wav"],
 			loop: false,
 			buffer: true,
 			volume: 0.3 * VOLUME
@@ -302,7 +302,7 @@ function initialize()
 
 	sfxJump = new Howl(
 	{
-		urls: ["jump.wav"],
+		urls: ["sounds/jump.wav"],
 		buffer: true,
 		volume: 1 * VOLUME,
 		onend: function() 
@@ -313,7 +313,7 @@ function initialize()
 
 	sfxDeath = new Howl(
 	{
-		urls: ["death.wav"],
+		urls: ["sounds/death.wav"],
 		buffer: true,
 		volume: 1 * VOLUME,
 		onend: function()
@@ -324,7 +324,7 @@ function initialize()
 
 	sfxPowerup = new Howl(
 	{
-		urls: ["powerup.wav"],
+		urls: ["sounds/powerup.wav"],
 		buffer: true,
 		volume: 1 * VOLUME,
 		onend: function()
@@ -335,7 +335,7 @@ function initialize()
 
 	sfxPowerdown = new Howl(
 	{
-		urls: ["powerdown.wav"],
+		urls: ["sounds/powerdown.wav"],
 		buffer: true,
 		volume: 1 * VOLUME,
 		onend: function()

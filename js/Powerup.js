@@ -20,17 +20,17 @@ var Powerup = function(x, y, type)
 	{
 		case 0:
 			//SPEED  BOOST 
-			this.image.src = "shoe.png";
+			this.image.src = "images/shoe.png";
 			this.height = 32;
 			this.width = 32;
 		break;
 		case 1:
 			//SLOW SPEED
-			this.image.src = "plantpotion.png"
+			this.image.src = "images/plantpotion.png"
 		break;
 		case 2:
 			//POGOSTICK / CONTINOUS JUMPING
-			this.image.src = "pogostick.png"
+			this.image.src = "images/pogostick.png"
 			this.width = 16;
 			this.height = 36
 		

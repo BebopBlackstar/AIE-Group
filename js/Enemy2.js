@@ -2,12 +2,12 @@ var ANIM_ENEMY_RIGHT = 0;
 var ANIM_ENEMY_LEFT = 1;
 var ANIM_ENEMY_MAX = 2;
 
-var Enemy = function(x, y)
+var Enemy2 = function(x, y)
 {
 	
-	this.sprite = new Sprite("imps.png");
-	this.sprite.buildAnimation(4, 2, 64, 45, 0.1, [0, 1, 2, 3]);
-	this.sprite.buildAnimation(4, 2, 64, 45, 0.1, [4, 5, 6, 7]);
+	this.sprite = new Sprite("images/bat.png");
+	this.sprite.buildAnimation(4, 4, 32, 32, 0.1, [4, 5, 6, 7]);
+	this.sprite.buildAnimation(4, 4, 32, 32, 0.1, [12, 13, 14, 15]);
 	
 	for(var i = 0; i < ANIM_ENEMY_MAX; i++)
 	{
@@ -22,11 +22,11 @@ var Enemy = function(x, y)
 	this.moveRight = true;
 	this.pause = 0;
 	
-	this.width = 64;
-	this.height = 45;
+	this.width = 32;
+	this.height = 64;
 }
 
-Enemy.prototype.update = function(deltaTime)
+Enemy2.prototype.update = function(deltaTime)
 {
 	var ddx = 0;			//acceleration
 
@@ -40,7 +40,7 @@ Enemy.prototype.update = function(deltaTime)
 	else
 	{
 	
-		//collision detection
+	//collision detection
 		var tx = pixelToTile(this.position.x);
 		var ty = pixelToTile(this.position.y);
 		var nx = (this.position.x) % TILE;		//true if enemy overlaps right
@@ -98,7 +98,7 @@ Enemy.prototype.update = function(deltaTime)
 	}
 }
 
-Enemy.prototype.draw = function(deltaTime)
+Enemy2.prototype.draw = function(deltaTime)
 {
 	context.fillStyle = "yellow";
 	this.sprite.draw(context, this.position.x - camera.worldOffsetX - this.width/2, this.position.y - this.height);

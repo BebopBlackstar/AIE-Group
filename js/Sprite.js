@@ -140,11 +140,3 @@ Sprite.prototype.draw = function(c, x, y) {
 			this.animations[this.currentAnimation][this.currentFrame].width,
 			this.animations[this.currentAnimation][this.currentFrame].height);
 };
-
-
-
-
-
-
-
-
