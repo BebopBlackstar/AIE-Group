@@ -89,7 +89,6 @@ var gameState = STATE_SPLASH;
 var muteMusic = false;
 var muteSounds = false;
 
-var runningBackground;
 var musicBackground;
 var sfxJump;
 var sfxDeath;
@@ -114,7 +113,7 @@ var powerups = [];
 var enemies2 = [];
 var camera = new Camera();
 
-var VOLUME = 0;
+var VOLUME = 1;
 
 // loading of images
 
@@ -283,26 +282,16 @@ function initialize()
 	// background music
 	musicBackground = new Howl(
 		{
-			urls: ["sounds/spookyscaryskeletons.mp3"],
+			urls: ["sounds/music.mp3"],
 			loop: true,
 			buffer: true,
 			volume: 1 * VOLUME
 		}
 	)
 
-	runningBackground = new Howl(
-		{
-			urls: ["sounds/run.wav"],
-			loop: false,
-			buffer: true,
-			volume: 0.3 * VOLUME
-		} 
-	);
-
-
 	sfxJump = new Howl(
 	{
-		urls: ["sounds/jump.wav"],
+		urls: ["sounds/jump.mp3"],
 		buffer: true,
 		volume: 1 * VOLUME,
 		onend: function() 
@@ -313,7 +302,7 @@ function initialize()
 
 	sfxDeath = new Howl(
 	{
-		urls: ["sounds/death.wav"],
+		urls: ["sounds/death.mp3"],
 		buffer: true,
 		volume: 1 * VOLUME,
 		onend: function()
@@ -324,7 +313,7 @@ function initialize()
 
 	sfxPowerup = new Howl(
 	{
-		urls: ["sounds/powerup.wav"],
+		urls: ["sounds/powerup.mp3"],
 		buffer: true,
 		volume: 1 * VOLUME,
 		onend: function()
@@ -335,7 +324,7 @@ function initialize()
 
 	sfxPowerdown = new Howl(
 	{
-		urls: ["sounds/powerdown.wav"],
+		urls: ["sounds/powerdown.mp3"],
 		buffer: true,
 		volume: 1 * VOLUME,
 		onend: function()
@@ -405,7 +394,6 @@ function resetGame()
 	camera = new Camera(); 
 	enemies.splice(0, enemies.length);
 	musicBackground.stop();
-	runningBackground.stop();
 	initialize();
 }
 
@@ -422,7 +410,6 @@ function drawMap(deltaTime)
 // menu/splash function. runs every frame.
 function runSplash(deltaTime)
 {
-	runningBackground.stop();
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
 	{
 	resetGame();

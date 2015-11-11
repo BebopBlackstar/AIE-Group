@@ -331,10 +331,7 @@ Player.prototype.collisionDetection = function()
 	var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);
 	var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty + 1);
 	
-	if (this.velocity.x > 0 && !this.jumping)
-	{
-		runningBackground.play();
-	}
+
 	
 	
 	
