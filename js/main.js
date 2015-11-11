@@ -55,6 +55,7 @@ var LAYER_OBJECT_TRIGGERS = 5;
 var LAYER_OBJECT_ENEMIES2 = 6;
 var LAYER_OBJECT_SPEEDPENALTIES = 7;
 var LAYER_OBJECT_POGOSTICKS = 8;
+var LAYER_OBJECT_GRAVITYPENALTIES = 9;
 
 
 var worldOffsetX = 10;
@@ -278,6 +279,20 @@ function initialize()
 			idx++;
 		}
 	} 
+	idx = 0;
+	for(var y = 1; y < level1.layers[LAYER_OBJECT_GRAVITYPENALTIES].height; y++) 
+	{
+		for(var x = 0; x < level1.layers[LAYER_OBJECT_GRAVITYPENALTIES].width; x++) 
+		{
+			if(level1.layers[LAYER_OBJECT_GRAVITYPENALTIES].data[idx] != 0) 
+			{
+				var px = tileToPixel(x);
+				var py = tileToPixel(y);
+				powerups.push(new Powerup(px, py, 3));
+			}
+			idx++;
+		}
+	} 
 	
 	// background music
 	musicBackground = new Howl(
@@ -492,6 +507,11 @@ function runGame(deltaTime)
 					player.playerState = 8;
 				
 				break;
+				case 3:
+				 // less gravity
+					player.timer = 5;
+					
+					player.playerState = 9;
 			}
 			powerups.splice(i, 1);
 			//sfxPowerdown.play();
