@@ -445,7 +445,7 @@ function runSplash(deltaTime)
 	context.fillStyle= '#FFD700';
 	var message = "Press SPACE"
 	var textMeasure = context.measureText(message);
-	context.fillText(message, SCREEN_WIDTH/2 - (textMeasure.width/2), 440);	
+	context.fillText(message, SCREEN_WIDTH/2 - (textMeasure.width/2), SCREEN_HEIGHT-100);	
 	player.speed = 0;
 	
 	if (player.sprite.currentAnimation != ANIM_IDLE_LARGE)
