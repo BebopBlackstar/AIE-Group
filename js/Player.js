@@ -164,7 +164,7 @@ Player.prototype.update = function(deltaTime)
 			
 
 	}
-	camera.generateMap(deltaTime);
+	camera.generateMap(deltaTime, LEVEL);
 
 	if (this.playerState != RUN && this.playerState != DEAD)
 	{

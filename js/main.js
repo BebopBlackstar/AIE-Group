@@ -36,6 +36,8 @@ function getDeltaTime()
 var SCREEN_WIDTH = canvas.width;
 var SCREEN_HEIGHT = canvas.height;
 
+var LEVEL = level1;
+
 var LAYER_COUNT = 6;
 var MAP = { tw: 1000, th: 30};
 var TILE = 16;
@@ -133,6 +135,9 @@ tileset.src = "images/tileset.png";
 var background = document.createElement("img");
 background.src = "images/caveedited.png";
 
+var lava = document.createElement("img");
+lava.src = "images/somelava.png";
+
 var fireEmitter = createFireEmitter("images/sparkle2.png", (SCREEN_WIDTH/4)*3, SCREEN_HEIGHT-100);
 	fireEmitter.minSize = 2;
 	fireEmitter.maxSize = 10;
@@ -144,7 +149,7 @@ var fireEmitter = createFireEmitter("images/sparkle2.png", (SCREEN_WIDTH/4)*3, S
 
 
 var cells = []; // the array that holds our simplified collision data
-function initialize() 
+function initialize(level1) 
 {
 	for(var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++) 
 	{ // initialize the collision map
@@ -181,7 +186,7 @@ function initialize()
 				var px = tileToPixel(x);
 				var py = tileToPixel(y);
 				
-				var type = rand(0, 2);
+				var type = rand(0, 3);
 				
 				switch(type)
 				{
@@ -191,6 +196,10 @@ function initialize()
 					
 					case 1:
 					enemies.push(new Enemy2(px, py));
+					break;
+					
+					case 2:
+					enemies.push(new Enemy3 (px, py));
 					break;
 				}
 				
@@ -351,7 +360,7 @@ function initialize()
 
 function intersects(o1, o2)
 {
-	if(o2.position.y + o2.height/2 < o1.position.y - o1.height/2 || o2.position.x + o2.width/2 < o1.position.x - o1.width/2 ||	o2.position.x - o2.width/2 > o1.position.x + o1.width/2 || o2.position.y - o2.height/2 > o1.position.y + o1.height/2)
+	if(o2.position.y + o2.height/2 < o1.position.y - o1.height/2 || o2.position.x + o2.width/3 < o1.position.x - o1.width/3 ||	o2.position.x - o2.width/3 > o1.position.x + o1.width/3 || o2.position.y - o2.height/2 > o1.position.y + o1.height/2)
 	{
 		//draws collision squares for testing
 		//context.fillRect(o2.position.x - o2.width/2 - camera.worldOffsetX, o2.position.y - o2.height, o2.width, o2.height)
@@ -409,7 +418,7 @@ function resetGame()
 	camera = new Camera(); 
 	enemies.splice(0, enemies.length);
 	musicBackground.stop();
-	initialize();
+	initialize(LEVEL);
 }
 
 function rand(floor, ceil)
@@ -462,12 +471,23 @@ function runGame(deltaTime)
 	context.drawImage(background, -camera.origin.x%(background.width*3)/3, 0)
 	context.drawImage(background, -camera.origin.x%(background.width*3)/3 + background.width, 0)
 
+	context.drawImage(lava, -camera.origin.x%(lava.width), 480)
+	context.drawImage(lava, -camera.origin.x%(lava.width) + lava.width, 480)
+	
+	
 	context.drawImage(logo, 500 - camera.origin.x, 100)
 	
 	
 	if(keyboard.isKeyDown(keyboard.KEY_SQUIGGLE) != true)
 	{
 		player.update(deltaTime);
+	}
+	else
+	{
+
+		player.sprite.update(deltaTime);
+		//camera.updateCamera(deltaTime, 1);
+		camera.generateMap(deltaTime, LEVEL);
 	}
 	
 	for (var i = 0; i < enemies.length; i++)
@@ -616,7 +636,7 @@ function run()
 	}
 }
 
-initialize();
+initialize(LEVEL);
 
 
 

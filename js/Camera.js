@@ -17,12 +17,12 @@ Camera.prototype.updateCamera = function(deltaTime, passedSpeed)
 	{
 		this.speed = 4 * deltaTime * 60;
 		// speeds up camera if player is moving to the right at the edge of screen
-		if (player.position.x - this.origin.x > 640)
+		if (player.position.x - this.origin.x > this.width)
 		{
 			// this is for when speed boost is on and the player is moving off to the right of screen. Makes the camera keep up with the player
-			this.origin.x = player.position.x - 640;
+			this.origin.x = player.position.x - this.width;
 		}
-		else if (player.position.x - this.origin.x > 600)
+		else if (player.position.x - this.origin.x > this.width - 40)
 		{
 			this.speed = 6 * deltaTime * 60;
 		}
@@ -35,10 +35,10 @@ Camera.prototype.updateCamera = function(deltaTime, passedSpeed)
 	
 }
 
-Camera.prototype.generateMap = function(deltaTime)
+Camera.prototype.generateMap = function(deltaTime, level1)
 {
 	// first if statement stops the camera moving at the end of the level.
-	var maxTiles = Math.floor(SCREEN_WIDTH / TILE) + 2;
+	var maxTiles = Math.floor(SCREEN_WIDTH / TILE) + 3;
 	var tileX = pixelToTile(this.origin.x);
 	var offsetX = TILE + Math.floor(this.origin.x%TILE);
 	startX = tileX;// - Math.floor(maxTiles / 2);
@@ -59,15 +59,16 @@ Camera.prototype.generateMap = function(deltaTime)
 		
 	for( var layerIdx=0; layerIdx < LAYER_COUNT; layerIdx++ )
 	{
-		for( var y = 0; y < level1.layers[layerIdx].height; y++ )
+		if (level1.layers[layerIdx].visible == true)
 		{
-			var idx = y * level1.layers[layerIdx].width + startX;
-			for( var x = startX; x < startX + maxTiles; x++ )
+			for( var y = 0; y < level1.layers[layerIdx].height; y++ )
 			{
-				if( level1.layers[layerIdx].data[idx] != 0 )
+				var idx = y * level1.layers[layerIdx].width + startX;
+				for( var x = startX; x < startX + maxTiles; x++ )
 				{
-					if (level1.layers[layerIdx].visible == true)
+					if( level1.layers[layerIdx].data[idx] != 0 )
 					{
+						
 						// the tiles in the Tiled map are base 1 (meaning a value of 0 means no tile),
 						// so subtract one from the tileset id to get the
 						// correct tile
@@ -75,9 +76,10 @@ Camera.prototype.generateMap = function(deltaTime)
 						var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) *(TILESET_TILE + TILESET_SPACING);
 						var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_X)) * (TILESET_TILE + TILESET_SPACING);
 						context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, (x-startX)*TILE - offsetX, (y-1)*TILE + TILE, TILESET_TILE, TILESET_TILE);
+						
 					}
+					idx++;
 				}
-				idx++;
 			}
 		}
 	}
